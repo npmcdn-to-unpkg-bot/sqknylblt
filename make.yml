@@ -1,0 +1,95 @@
+api: 2
+core: 7.x
+
+defaults:
+  projects:
+    subdir: contrib
+
+projects:
+  drupal:
+    type: core
+    version: ~
+    patch:
+      # Scale and crop image effect needs anchor option.
+      # https://www.drupal.org/node/1252606#comment-8305805
+      - https://www.drupal.org/files/issues/D7-scale-and-crop-1252606-37.patch
+
+      # Node access grants should be statically cached.
+      # https://www.drupal.org/node/2199001#comment-8495029
+      - https://www.drupal.org/files/issues/node_access_grants-static-cache-11.patch
+
+      # Invalid image style URLs should return 404, not 403.
+      # https://www.drupal.org/node/2211429#comment-10033677
+      - https://www.drupal.org/files/issues/drupal-image-style-not-found-2211429-4.patch
+
+      # Save and restore css/js/head with block cache.
+      # https://www.drupal.org/node/1460766
+      - https://www.drupal.org/files/issues/d7-block-cache-1460766-34.patch
+
+      # Ignore front end vendor folders to improve directory search performance
+      # https://www.drupal.org/node/2329453#comment-10622208
+      - https://www.drupal.org/files/issues/ignore_frontend_folders-2329453-101-7.x.patch
+
+  # For all projects, always specify the exact version that is to be used.
+  # For any project using a dev branch, always specify the revision id.
+  acquia_purge:
+    version: ~
+  acquia_connector:
+    version: ~
+  autologout:
+    version: ~
+  ckeditor:
+    version: ~
+  clamav:
+    version: ~
+  diff:
+    version: ~
+  email_confirm:
+    version: ~
+  entity:
+    version: ~
+  entitycache:
+    version: ~
+  fast_404:
+    version: ~
+  features:
+    version: ~
+  genpass:
+    version: ~
+  honeypot:
+    version: ~
+  login_security:
+    version: ~
+  memcache:
+    version: ~
+  mollom:
+    version: ~
+  paranoia:
+    version: ~
+  password_policy:
+    version: ~
+  realname:
+    version: ~
+  seckit:
+    version: ~
+  security_review:
+    version: ~
+  stage_file_proxy:
+    version: ~
+  strongarm:
+    version: ~
+  token:
+    version: ~
+  transliteration:
+    version: ~
+  username_enumeration_prevention:
+    version: ~
+  views:
+    version: ~
+
+libraries:
+  ckeditor:
+    download:
+      type: file
+      url: http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.4/ckeditor_4.5.4_standard.zip
+    directory_name: ckeditor

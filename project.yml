@@ -1,0 +1,30 @@
+project:
+  # The acquia_subname value is the machine name of your subscription on Acquia
+  # Cloud. E.g., if your dev env URL on Acquia Cloud is
+  # http://psprojectdev.prod.acquia-sites.com/ then your acquia_subname is
+  # "psproject". This value is used to correctly configure settings in
+  # settings.php includes. This will also determine the the directory name
+  # of the new repository.
+  acquia_subname: 'sqknyl'
+  # Used for enforcing correct git commit msg syntax.
+  prefix: 'NYL'
+  human_name: 'NYLottery'
+  # This is the default makefile that will be used to build dependencies.
+  # It should live in the project root.
+  make_file: 'make.yml'
+  profile:
+    name: 'bolted'
+    # Please ensure contrib profiles are also in your make file.
+    contrib: false
+  # This is used to build front end artifacts. E.g., SASS compilation.
+  themes:
+    - thunder
+
+# Configuration settings for new git repository.
+git:
+  default_branch: master
+  remotes:
+    # Defining git remotes allows builds deployed via CI.
+    # Only add git repositories that you would like to deploy to!
+    #- bolted7@svn-5159.devcloud.hosting.acquia.com:bolted7.git
+    - git@github.com/zepner/d7blt.git
