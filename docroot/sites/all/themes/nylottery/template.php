@@ -104,7 +104,7 @@ EOF;
                 . '    <rect x="0" y="66%" height="33%" width="33%"></rect>'
                 . '    <rect x="66%" y="66%" height="33%" width="33%"></rect>'
                 . '  </svg>'
-                // . '<span class="glyphicon glyphicon-th-large"> </span>'
+                // . '<span class="glyphicon glyphicon-th-large"> </span>' 
                 . '</a></li>';
     }
     else {
