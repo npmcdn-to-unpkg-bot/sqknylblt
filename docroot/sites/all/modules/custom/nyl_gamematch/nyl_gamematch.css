@@ -1,0 +1,8 @@
+#gm-form .form-type-radios,
+#gm_results {
+	display: none;
+}
+
+#gm-form .form-item.current {
+	display: block;
+}

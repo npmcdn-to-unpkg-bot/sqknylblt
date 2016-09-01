@@ -1,0 +1,9 @@
+.slider-welcome-ribbon {
+  @include ribbon($ribbon-light-blue, $white, 13px, bottom, true);
+  @include graphik(13px, 1, 600);
+  
+  @include md-desktop {
+    @include ribbon($ribbon-light-blue, $white, 15px, bottom, true);
+    font-size: rem-calc(15px);
+  }
+}

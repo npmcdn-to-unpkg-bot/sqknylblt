@@ -1,0 +1,9 @@
+name = NYLottery Winning Numbers
+core = 7.x
+package = NY Lottery
+version = 7.x-0.2
+dependencies[] = jquery_update
+dependencies[] = libraries (>=2.x)
+dependencies[] = nyl_draw
+files[] = includes/nyl_winning_numbers_json.inc
+project path = sites/all/modules/custom

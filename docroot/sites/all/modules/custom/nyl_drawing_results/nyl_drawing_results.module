@@ -1,0 +1,90 @@
+<?php
+require_once(drupal_get_path('module', 'nyl_drawing_results').'/includes/nyl_drawing_results.inc');
+require_once(drupal_get_path('module', 'nyl_drawing_results').'/includes/nyl_drawing_results_json.inc');
+
+/**
+ * @file
+ * Contains nyl_drawing_results.module.
+ */
+
+
+/**
+ * Implement hook_menu
+ * @return mixed
+ */
+function nyl_drawing_results_menu() {
+  $module_path = drupal_get_path('module', 'nyl_drawing_results');
+  // nyl_drawing_results_getProbability_json($gameId, $relativeDateTime = "90", $refresh = FALSE)
+  $items['nyl_drawing_results/%/%/getProbability.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_drawing_results_getProbability_json',
+    'page arguments' => array(1, 2, false),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path . '/includes',
+    'file' => 'nyl_drawing_results_json.inc',
+  );
+  return $items;
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+function nyl_drawing_results_block_info() {
+  $blocks = array();
+  $blocks['nyl_drawing_results_block'] = array(
+    'info' => t('Drawing Results Block'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  $blocks['nyl_drawing_extended_engagement'] = array(
+    'info' => t('Previously Checked and Probability Index Block'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nyl_drawing_results_block_view($delta='') {
+  $block = array();
+  switch($delta) {
+    case 'nyl_drawing_results_block' :
+      $form = drupal_get_form('nyl_drawing_results_form');
+      $block['content'] =  drupal_render($form);
+      $block['subject'] = t('Drawing Results');
+      break;
+    case 'nyl_drawing_extended_engagement':
+      $node = menu_get_object();
+      if ($node) {
+        $probabilityIndex = theme('nyl_drawing_extended_engagement', array('node' => $node));
+        $block['content'] = render($probabilityIndex);
+      }
+  }
+  return $block;
+}
+
+/**
+ * Implement hook_theme();
+ * @return array
+ */
+function nyl_drawing_results_theme() {
+  $module_path = drupal_get_path('module', 'nyl_drawing_results');
+  return array(
+    'nyl_drawing_results_previously_checked' => array(
+      'template' => 'nyl-drawing-results-previously-checked',
+      'path' => $module_path . '/templates',
+      'variables' => array(
+        'tickets' => array(),
+        'notes' => array(), // TODO : implement notes (ex. 'This is a winner in 1984')
+      )
+    ),
+    'nyl_drawing_extended_engagement' => array(
+      'template' => 'nyl-drawing-extended-engagement',
+      'path' => $module_path . '/templates',
+      'variables' => array('node' => NULL),
+    ),
+  );
+}

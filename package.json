@@ -1,0 +1,14 @@
+{
+  "name": "sqknyl",
+  "version": "1.0.0",
+  "author": "Pedro Rocha <pedro.br@squeaky.com>",
+  "devDependencies": {
+    "coffee-script": "^1.8.0",
+    "gulp": "^3.8.10",
+    "gulp-compass": "^2.0.3",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-sass": "^2.0.4",
+    "gulp-plumber": "^1.0.1",
+    "run-sequence": "^1.0.2"
+  }
+}

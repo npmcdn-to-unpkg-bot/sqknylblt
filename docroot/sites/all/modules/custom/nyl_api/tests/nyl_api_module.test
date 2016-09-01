@@ -1,0 +1,36 @@
+<?php
+/**
+ * Tests for nyl_api_getAccessToken functions.
+// DrupalUnitTestCase did not work
+ */
+class nyl_apiGetAccessTokenUnitTest extends DrupalWebTestCase
+{
+
+
+  public static function getInfo()
+  {
+    print("nyl_api_getAccessToken : getInfo");
+    return array(
+      'name' => 'SimpleTest nyl_api.module.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp()
+  {
+    parent::setUp();
+    // set variable in new db.
+    variable_set('nyl_api_server_url', 'https://staging.nylgames.mrmdigital.com/nyl/v1');
+  }
+
+
+  /**
+   * Check that nyl_api_getAccessToken() returns the expected md5 string.
+   */
+  function testGetAccessToken()
+  {
+    $token = nyl_api_getAccessToken();
+    $this->assertTrue(is_string($token));
+  }
+}

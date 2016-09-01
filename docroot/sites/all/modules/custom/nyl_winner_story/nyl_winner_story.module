@@ -1,0 +1,21 @@
+<?php
+/**
+ * @file
+ * Code for the Winner Story feature.
+ */
+
+include_once 'nyl_winner_story.features.inc';
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_winner_story_theme() {
+  return [
+    'nyl_winner_story_home' => array(
+      'template' => 'templates/home_winner_story_block',
+      'variables' => [
+        'user' => null
+      ],
+    ),
+  ];
+}

@@ -1,0 +1,57 @@
+<?php
+/**
+ * Implements hook_install().
+ */
+function nyl_instant_install() {
+  $vocabulary = taxonomy_vocabulary_machine_name_load('instant_game_categories');
+
+  // Create vocab if needed.   Need to match feature.
+  if ($vocabulary == FALSE) {
+    $new_vocab = (object)array(
+      'name' => 'Instant Game Categories',
+      'description' => 'Tag for Instant Games on Ways-to-Play',
+      'machine_name' => 'instant_game_categories',
+    );
+    taxonomy_vocabulary_save($new_vocab);
+    $vocabulary = taxonomy_vocabulary_machine_name_load('instant_game_categories');
+  }
+  $term1 = new stdClass();
+  $term1->name = 'Extended Play';
+  $term1->vid = $vocabulary->vid;
+  taxonomy_term_save($term1);
+
+  $term2 = new stdClass();
+  $term2->name = 'Classics';
+  $term2->vid = $vocabulary->vid;
+  taxonomy_term_save($term2);
+}
+
+/**
+ * Add terms into 'instant_game_categories' Taxonomy.
+ */
+function nyl_instant_update_7002() {
+  $vocabulary = taxonomy_vocabulary_machine_name_load('instant_game_categories');
+
+  // Delete old terms
+  foreach (taxonomy_get_tree($vocabulary->vid) as $term) {
+    taxonomy_term_delete($term->tid);
+  }
+  // Add new term
+  $term1 = new stdClass();
+  $term1->name = 'Extended Play';
+  $term1->vid = $vocabulary->vid;
+  taxonomy_term_save($term1);
+  // Add new term
+  $term2 = new stdClass();
+  $term2->name = 'Classics';
+  $term2->vid = $vocabulary->vid;
+  taxonomy_term_save($term2);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function my_module_uninstall() {
+  $vocab = taxonomy_vocabulary_machine_name_load('instant_game_categories');
+  taxonomy_vocabulary_delete($vocab->vid);
+}

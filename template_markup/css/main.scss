@@ -1,0 +1,90 @@
+/* NYL CSS - written by Squeaky Wheel Media */
+
+@import "global/fonts";
+@import "global/variables";
+@import "global/mixins-functions";
+@import "global/typography";
+@import "global/additional-layouts";
+
+@import "components/misc";
+@import "components/form-elements";
+@import "components/nav";
+@import "components/modals";
+@import "components/buttons";
+@import "components/ribbons";
+@import "components/winning-numbers";
+@import "components/ways-to-play";
+@import "components/homepage-sections";
+@import "components/header";
+@import "components/footer";
+
+* {
+  outline: none;
+}
+
+html {
+  font-size: $root-font-size;
+
+  @include sm-tablet-up {
+    font-size: $root-font-size*1.2;
+  }
+
+  @include md-desktop-up {
+    font-size: $root-font-size*1.6;
+  }
+
+  @include lg-desktop {
+    font-size: $root-font-size*2;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/*---- General Layout ----*/
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 900px;
+  width: auto;
+
+  @include lg-desktop {
+    max-width: 1200px;
+  }
+}
+
+div.content {
+  margin: 0 auto;
+  padding: {
+    bottom: rem-calc(25px);
+    left: rem-calc(50px);
+    right: rem-calc(50px);
+    top: rem-calc(25px);
+  }
+  width: 100%;
+
+  @include lg-desktop {
+    max-width: 1280px;
+  }
+
+  &.wide {
+    padding: {
+      left: rem-calc(25px);
+      right: rem-calc(25px);
+    }
+
+    @include lg-desktop {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}

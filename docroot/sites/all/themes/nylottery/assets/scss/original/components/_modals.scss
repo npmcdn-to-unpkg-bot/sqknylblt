@@ -1,0 +1,111 @@
+button.close {
+  font-weight: 400;
+  font-size: rem-calc(40px);
+  position: relative;
+  right: rem-calc(10px);
+  text-shadow: none;
+
+  &, &:hover {
+    color: $dark-blue;
+    opacity: 1;
+  }
+}
+
+.modal-open .modal {
+  height: 100vh;
+  width: 100vw;
+}
+
+.modal.modal-pale-blue {
+  background: $pale-blue;
+
+  &:before, &:after {
+    content: '';
+    display: block;
+    position: fixed;
+    width: 60vw;
+    z-index: -1;
+  }
+
+  &:before {
+    background: $lottery-yellow; /* Old browsers */
+    background: -moz-linear-gradient(0deg, $lottery-red 0%, $lottery-red 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-yellow 66%, $lottery-yellow 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(0deg, $lottery-red 0%, $lottery-red 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-yellow 66%, $lottery-yellow 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(0deg, $lottery-red 0% ,$lottery-red 33%, $lottery-orange 33% ,$lottery-orange 66% ,$lottery-yellow 66%, $lottery-yellow 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#{$lottery-red}, endColorstr=#{$lottery-yellow}, GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    top: 35vh;
+    height: 12vw;
+    left: -23vw;
+    @include prefixr(transform, rotate(-45deg));
+
+    @include landscape {
+      top: 0;
+    }
+
+    @include md-desktop-up {
+      background: $lottery-yellow; /* Old browsers */
+      background: -moz-linear-gradient(0deg, $lottery-yellow 0%, $lottery-yellow 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-red 66%, $lottery-red 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(0deg, $lottery-yellow 0%, $lottery-yellow 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-red 66%, $lottery-red 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(0deg, $lottery-yellow 0% ,$lottery-yellow 33%, $lottery-orange 33% ,$lottery-orange 66% ,$lottery-red 66%, $lottery-red 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#{$lottery-yellow}, endColorstr=#{$lottery-red}, GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+      top: -8vw;
+      height: 15vw;
+      left: auto;
+      right: -7vw;
+      @include prefixr(transform, rotate(20deg));
+    }
+  }
+
+  &:after {
+    background: $lottery-yellow; /* Old browsers */
+    background: -moz-linear-gradient(0deg, $lottery-red 0%, $lottery-red 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-yellow 66%, $lottery-yellow 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(0deg, $lottery-red 0%, $lottery-red 33%, $lottery-orange 33%, $lottery-orange 66%, $lottery-yellow 66%, $lottery-yellow 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(0deg, $lottery-red 0% ,$lottery-red 33%, $lottery-orange 33% ,$lottery-orange 66% ,$lottery-yellow 66%, $lottery-yellow 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#{$lottery-red}, endColorstr=#{$lottery-yellow}, GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    bottom: -8vw;
+    height: 15vw;
+    left: -7vw;
+    @include prefixr(transform, rotate(20deg));
+  }
+
+  .modal-header {
+    background: url(../img/tray-arrow.png) repeat-x center bottom;
+    border: none;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    z-index: 5;
+
+    &.open {
+      @include landscape {
+        @include prefixr(transition, all 1.5s);
+        height: 32px;
+        padding: 0;
+      }
+    }
+
+    @include md-desktop-up {
+      background: none transparent;
+      padding: 0;
+    }
+  }
+
+  .modal-top {
+    max-width: 1200px;
+    position: relative;
+
+    @include lg-desktop {
+      max-width: 1200px;
+    }
+  }
+
+  .modal-body {
+    position: static;
+    z-index: 2;
+    width: 100%;
+  }
+}
+
+.modal.modal-white {
+  background-color: $white;
+}

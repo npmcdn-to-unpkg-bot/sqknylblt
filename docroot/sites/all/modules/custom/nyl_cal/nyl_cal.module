@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function nyl_cal_menu() {
+
+  $items['ics/%node'] = array(
+    'page callback' => 'nyl_cal_ics',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+function nyl_cal_ics() {
+  global $base_url;
+  $node = node_load(arg(1));
+  header('Content-type: text/calendar; charset=utf-8');
+  header('Content-Disposition: attachment; filename=' . $node->nid . '.ics');
+  $ics = "BEGIN:VCALENDAR\r
+VERSION:2.0\r
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN\r
+CALSCALE:GREGORIAN\r
+BEGIN:VEVENT\r
+DTEND:" . dateToCal($node->field_date['und'][0]['value2']) . "\r
+UID:" . uniqid() . "\r
+DTSTAMP:" . dateToCal(time()) . "\r
+LOCATION:" . (isset($address) ? $address : 'none') . "\r
+DESCRIPTION:" . $node->body['und'][0]['value'] . "\r
+URL;VALUE=URI:" . $base_url . "/node/" . $node->nid . "\r
+SUMMARY:" . $node->title . "\r
+DTSTART:" . dateToCal($node->field_date['und'][0]['value']) . "\r
+END:VEVENT\r
+END:VCALENDAR";
+  print $ics;
+  drupal_exit();
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function nyl_cal_field_extra_fields() {
+  $extra['node']['nyl_event'] = array(
+    'display' => array(
+      'calwidget' => array(
+        'label' => t('Add to Cal'),
+        'description' => t('Add to Calendar widget.'),
+        'weight' => 9,
+      ),
+    )
+  );
+
+  return $extra;
+}
+
+/**
+ * Implementation of hook_entity_view().
+ */
+function nyl_cal_entity_view($entity, $type, $view_mode, $langcode) {
+  //dsm($entity);
+  if ($type == 'node' && $entity->type == 'nyl_event') {
+    $extra_fields = field_extra_fields_get_display('node', $entity->type, $view_mode);
+    if (!empty($extra_fields['calwidget']) && $extra_fields['calwidget']['visible'] == TRUE) {
+      switch ($view_mode) {
+        default:
+          // Add css dependencies
+          drupal_add_css('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/south-street/jquery-ui.css');
+          drupal_add_css(drupal_get_path('module', 'nyl_cal') .'/jquery.addtocal.css');
+          // Add js dependencies
+          drupal_add_js('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js');
+          drupal_add_js(drupal_get_path('module', 'nyl_cal') .'/jquery.addtocal.js');
+          drupal_add_js(drupal_get_path('module', 'nyl_cal') .'/nyl_cal.js');
+          // Populate widget markup with event detail
+          $start_date = dateToCal($entity->field_event_date['und'][0]['value']);
+          $end_date = dateToCal($entity->field_event_date['und'][0]['value2']);
+          $entity->content['calwidget'] = array(
+            '#markup' => '<div class="addtocal vevent calbutton" id="cal-' . $entity->nid . '">
+              <div class="summary">' . $entity->title . '</div>
+              <div class="dtstart date" title="' . $start_date . '">' . $start_date . '</div>
+              <div class="dtend date" title="' . $end_date . '">' . $end_date . '</div>
+              <div class="description">' . $entity->body['und'][0]['value'] . '</div>
+              <button>+ Add to Calendar</button>
+            </div>'
+          );
+      }
+    }
+  }
+}
+
+function dateToCal($timestamp) {
+  // Note: deprecated. previously stored with unix timestamp
+  // return date('Ymd\THis\Z', $timestamp);
+
+  // Current date format: [2016-06-27 16:00:00]
+  // Inject timestamp delimeters to maintain format
+  $timestamp_arr = explode(' ', $timestamp);
+  $timestamp_arr[2] = $timestamp_arr[1];
+  $timestamp_arr[1] = "\T";
+  $timestamp_arr[3] = "\Z";
+  $timestamp = implode('', $timestamp_arr);
+  return $timestamp;
+}

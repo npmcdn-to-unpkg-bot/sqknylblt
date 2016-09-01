@@ -1,0 +1,8 @@
+name = NYLottery Cal Widget
+description = Adds calendar widget to events.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.1
+
+#files[] = includes/nyl_cal.inc
+dependencies[] = nyl_event

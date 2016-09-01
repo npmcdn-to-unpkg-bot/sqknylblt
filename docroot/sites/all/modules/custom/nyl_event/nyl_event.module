@@ -1,0 +1,82 @@
+<?php
+include_once 'nyl_event.features.inc';
+
+/**
+ * @file
+ * Code for the NYLottery Event feature.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_event_theme() {
+  $module_path = drupal_get_path('module', 'nyl_event');
+  return array(
+    'nyl_event_nearby_block' => array(
+      'template' => 'nyl-event-nearby-block',
+      'path' => $module_path . '/templates',
+      'variables' => array('events' => array()),
+    ),
+  );
+}
+
+/**
+ * @param $location
+ * @return
+ *   An array where
+ *   -> the keys are a postive integer ranking of the search result's closeness to the parameter $postal_code
+ *   with 1 being assigned to the nearest postal code
+ *   -> the values are an associative array where
+ *   'postal_code'   => A postal code that fell within the search-radius given by $distance and $distance_unit.
+ *   'country'       => The two-letter ISO code for the home-country of this particular postal_code search result.
+ *   'city'          => The city to which this postal code belongs.
+ *   'province'      => The province to which this postal code belongs.
+ *   'lon'           => The longitude coordinate of the approximate center of the area covered by 'postal_code'
+ *   'lat'           => The latitude coordinate of the approximate center of the area covered by 'postal_code'
+ *   'distance'      => The number of 'km's or 'mile's that are between the approximate center of the area of
+ *   the $postal_code parameter and that of the 'postal_code' in this subarray
+ *   'distance_unit' => The unit of distance specified by 'scalar'
+ */
+function nyl_event_nearby_bylocation($location, $dist, $unit) {
+  $lat = $location['lat'];
+  $lon = $location['lon'];
+  // code partially based on location_search_search_execute()
+  $subquery = db_select('location', 'l');
+  $subquery->addField('l', 'lid');
+  $subquery->condition('l.country', 'us');
+  $subquery->condition('l.province', 'NY');
+
+  $distance_meters = _location_convert_distance_to_meters($dist, $unit);
+  // MBR query to make it easier on the database.
+  $latrange = earth_latitude_range($lon, $lat, $distance_meters);
+  $lonrange = earth_longitude_range($lon, $lat, $distance_meters);
+  $subquery->condition('l.latitude', array($latrange[0], $latrange[1]), 'BETWEEN');
+  $subquery->condition('l.longitude', array($lonrange[0], $lonrange[1]), 'BETWEEN');
+
+
+  // Distance query to finish the job.
+  $subquery->where(earth_distance_sql($lon, $lat) . ' < ' . $distance_meters);
+
+  // calculated distance
+  // $subquery->addExpression(earth_distance_sql($lon, $lat, 'l'), 'distance');
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'nyl_event')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->fieldCondition('field_event_date', 'value2', date("Y-m-d"), '>=')
+    ->fieldCondition('field_event_location', 'lid', $subquery, 'IN')
+    ->fieldOrderBy('field_event_date', 'value', 'ASC')
+    ->range(0, 10)
+    ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    return entity_load('node', $nids);
+  }
+  else {
+    return array();
+  }
+}

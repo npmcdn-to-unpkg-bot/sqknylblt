@@ -1,0 +1,289 @@
+/* Utilities */
+@mixin prefixr($property, $value, $prefixes: (webkit, moz, ms, o) ) {
+  @each $prefix in $prefixes {
+    -#{$prefix}-#{$property}: #{$value};
+  }
+  #{$property}: #{$value};
+}
+
+// Use this when the value also has to be prefixed.
+@mixin value-prefixr($property, $value, $prefixes: (webkit, moz, ms, o) ) {
+  @each $prefix in $prefixes {
+    -#{$prefix}-#{$property}: -#{$prefix}-#{$value};
+  }
+  #{$property}: #{$value};
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+     @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+/* Media Queries */
+@mixin retina {
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (min--moz-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx) {
+    @content;
+  }
+}
+
+@mixin lg-desktop {
+  @media only screen and (min-width: #{$lg-width}) {
+    @content;
+  }
+}
+
+@mixin md-desktop-up-landscape {
+  @media only screen and (min-width: #{$md-width}) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin md-desktop-up {
+  @media only screen and (min-width: #{$md-width}) {
+    @content;
+  }
+}
+
+@mixin md-desktop {
+  @media only screen and (min-width: #{$md-width}) and (max-width: #{$lg-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin sm-tablet-up-landscape {
+  @media only screen and (min-width: #{$sm-width}) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin sm-tablet-up {
+  @media only screen and (min-width: #{$sm-width}) {
+    @content;
+  }
+}
+
+@mixin sm-tablet {
+  @media only screen and (min-width: #{$sm-width}) and (max-width: #{$md-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin xs-mobile-up-landscape {
+  @media only screen and (min-width: #{$xs-width}) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin xs-mobile-up {
+  @media only screen and (min-width: #{$xs-width}) {
+    @content;
+  }
+}
+
+@mixin xs-mobile {
+  @media only screen and (min-width: #{$xs-width}) and (max-width: #{$sm-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin landscape {
+  @media only screen and (orientation: landscape) {
+    @content;
+  }
+}
+
+/* Fonts */
+@mixin graphik($size, $line-height: 1, $weight: normal, $style: normal) {
+  font: {
+    family: $graphik;
+    size: rem-calc($size);
+    style: $style;
+    weight: $weight;
+  }
+  letter-spacing: 1px;
+  line-height: $line-height;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Alignment */
+@mixin vertical-align-parent {
+  @include prefixr(transform-style, preserve-3d);
+}
+
+@mixin vertical-align($position: relative) {
+  @include prefixr(transform, translateY(-50%));
+  position: $position;
+  top: 50%;
+}
+
+/* Components */
+@mixin btnx($size: 20px, $color: $white) {
+  background: transparent;
+  border: 0;
+  height: $size*2;
+  position: relative;
+  text-indent: -99999px;
+  width: $size*2;
+
+  &:before, &:after {
+    background-color: $color;
+    border-radius: rem-calc(1px);
+    content: '';
+    display: block;
+    height: rem-calc(2px);
+    right: 0;
+    position: absolute;
+    top: 50%;
+    width: rem-calc($size);
+  }
+  &:before {
+    transform: rotate(45deg);
+  }
+  &:after {
+    transform: rotate(-45deg);
+  }
+}
+
+@mixin ribbon($color: $ribbon-default, $textColor: $ribbon-default-text, $size: 30px, $ribbonPosition: bottom, $centered: false) {
+
+  // if the direction of the ribbon is neither "bottom" or "top", set the position to "bottom"
+  @if ($ribbonPosition != bottom and $ribbonPosition != top) {
+    $ribbonPosition: bottom;
+  }
+
+  @if ($ribbonPosition == bottom) {
+    @include prefixr(transform, translateY(30px));
+  }
+  @else {
+    @include prefixr(transform, translateY(-30px));
+  }
+
+  span {
+    background: $color;
+    color: $textColor;
+    display: inline-block;
+    height: rem-calc($size*2);
+    line-height: rem-calc($size*2);
+    padding: 0 rem-calc(floor($size/2)*3);
+    position: relative;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -webkit-transform-style: preserve-3d;
+
+    @if ($centered) {
+      margin: 0 auto;
+    }
+
+    &:before,
+    &:after {
+      border: rem-calc($size) solid darken($color,25%);
+      content: "";
+      display: block;
+      position: absolute;
+      width: rem-calc($size*1.5);
+
+      #{$ribbonPosition}: rem-calc(-$size/4);
+
+      z-index: -1;
+      -webkit-transform: translateZ(-1px);
+    }
+
+    &:before {
+      border-left: rem-calc($size/3) solid rgba(255, 255, 255, 0);
+      left: rem-calc(-$size*.7);
+    }
+
+    &:after {
+      border-right: $size/3 solid rgba(255, 255, 255, 0);
+      right: rem-calc(-$size*.7);
+    }
+  }
+}
+
+@mixin slanted-bg($color, $position, $skew) {
+
+  background: {
+    clip: content-box;
+    color: $color;
+  }
+
+  @if ($position == before) {
+    padding-top: 15%;
+  } @else {
+    padding-bottom: 30%;
+  }
+
+  position: relative;
+
+  @include xs-mobile-up {
+    @if ($position == before) {
+      padding-top: 15%;
+    } @else {
+      padding-bottom: 10%;
+    }
+
+  }
+
+  @include sm-tablet-up {
+    @if ($position == before) {
+      padding-top: 10%;
+    } @else {
+      padding-bottom: 10%;
+    }
+
+  }
+
+  &:#{$position} {
+    background-color: $color;
+    content: '';
+    display: block;
+    height: 50%;
+    left: 0;
+    position: absolute;
+
+    @if ($position == before) {
+      top: 0;
+    } @else {
+      top: 50%;
+    }
+
+    @if (($position == after and $skew == right) or ($position == before and $skew == left)) {
+      @include prefixr(transform, skewY(15deg));
+    } @else {
+      @include prefixr(transform, skewY(-15deg));
+    }
+
+    width: 100%;
+    z-index: -1;
+
+    @include sm-tablet-up {
+      @if (($position == after and $skew == right) or ($position == before and $skew == left)) {
+        @include prefixr(transform, skewY(7deg));
+      } @else {
+        @include prefixr(transform, skewY(-7deg));
+      }
+    }
+  }
+
+}
+
+@function rem-calc($size) {
+  $remSize: $size / 10px;
+  @return #{$remSize}rem;
+}

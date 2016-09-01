@@ -1,0 +1,222 @@
+<?php
+/**
+ * @file
+ * Simpletest for nyl_api_vendor.inc functionality.
+ *
+ * php ./core/scripts/run-tests.sh --url http://http://nylottery.local// --class "Drupal\NYLAPIGetVendorsBaseUnitTest"
+ * php ./scripts/run-tests.sh --list     //  Display all available test groups.
+ *
+
+ */
+
+/**
+ * Tests for nyl_api_getVendors functions.
+// DrupalUnitTestCase did not work
+ */
+class nyl_apiGetVendorsBaseUnitTest extends DrupalWebTestCase {
+
+
+  public static function getInfo() {
+    print("nyl_apiGetVendorsBaseUnitTest : getInfo");
+    return array(
+      'name' => 'SimpleTest nyl_api_getVendors.inc with the near option.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // set variable in new db.
+    variable_set('nyl_api_server_url', 'https://staging.nylgames.mrmdigital.com/nyl/v1');
+
+    $this->latitude = 40.751;
+    $this->longitude = -74.0061;
+
+    // We expect a lot of whitespaces.
+    $this->cold_vendor_test_case = array(
+      "name" => "J & P LOBBY STAND INC         ",
+      "type" => 0,
+      "longitude" => -74.0061,
+      "latitude" => 40.751,
+      "streetAddress" => "601 WEST 26 ST                ",
+      "city" => "NEW YORK            ",
+      "state" => "NY",
+      "zipCode" => "10001",
+      "phoneNumber" => null,
+      "category" => 0,
+      "hot" => false,
+      "description" => null,
+      "games" => array(),
+      "id" => 16323
+    );
+  }
+
+  /**
+   * Check that nyl_api_getVendors() returns the expected vendor as closest.
+   */
+  function testCommonGetVendorsNear() {
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}"
+    );
+    $response = nyl_api_getVendors($query);
+
+    $this->pass(var_export($response, TRUE));
+    $this->pass('response : '.json_encode($response));
+
+    $this->assertTrue(is_object($response), 'Response is a object');
+    $this->assertTrue(is_array($response->content), 'Response content is an array');
+    $this->assertFalse(empty($response->content), 'Response content is not empty');
+    $nearest = (array)$response->content[0];
+    foreach ($this->cold_vendor_test_case as $key => $expected) {
+      if (is_array($expected)) {
+        $this->assertTrue(is_array($nearest[$key]));
+        foreach($expected as $i => $j) {
+          $this->assertEqual($nearest[$key][$i], $j, "testing {$key},{$i}: '$nearest[$key][$i]' == '{$j}'");
+        }
+      }
+      else {
+        $this->assertEqual($nearest[$key], $expected, "testing {$key}: '{$expected}' == '{$nearest[$key]}'");
+      }
+    }
+  }
+
+  /**
+   * Check "Required String parameter 'near, games, distance' is not present",
+    "statusCode": 400,
+    "errorCode": 40001,
+   *
+   * Use unimplemented parameter in OLD documentation.
+   * categories: A comma separated list of category IDs to limit the vendors to
+   * Ex: api.sample.com/v1/vendors?categories=9,15,25,2
+   */
+  function testCommonGetVendorsRequired() {
+    $response = nyl_api_getVendors(array('categories' => "9,15,25,2"));
+  }
+}
+
+
+/**
+ * Tests for nyl_api_getVendors functions.
+ * * https://staging.nylgames.mrmdigital.com/nyl/v1/vendors?near=40.7527277,-74.0089612&distance=999999999
+ *
+ *
+ *
+"statusCode": 400,
+"errorCode": 40001,
+"Required String parameter 'near, games, distance' is not present",
+ */
+class nyl_api_GetVendorsOptionalUnitTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    print("nyl_api_GetVendorsOptionalUnitTest : getInfo");
+    return array(
+      'name' => 'SimpleTest nyl_api_getVendors() with page, size and games optional options',
+      'description' => "Confirm that the optional parameters 'games', 'distance', 'page' and 'size'",
+      'group' => 'NYLottery',
+    );
+  }
+
+  // Buffalo, NY [42.886448, -78.878372]
+  // Battery Park in NYC [40.7033, -74.0170 ]
+  // Plattsburgh, NY [44.6962042,-73.4919467]
+  function setUp() {
+    parent::setUp();
+    // set variable in new db.
+    variable_set('nyl_api_server_url', 'https://staging.nylgames.mrmdigital.com/nyl/v1');
+
+    $this->latitude = mt_rand(4070, 4288) / 100; // between 40.70 & 42.88
+    $this->longitude = mt_rand(-7887, -7349) / 100;  // between -78.87 & -73.49
+
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+    );
+    $this->default = nyl_api_getVendors($query);
+
+  }
+
+  /**
+   * Check that nyl_api_getVendors() returns the expected vendor as closest.
+   * Distance greater than VENDOR_API_MAX_DISTANCE wiil get "Failed to convert value of type 'java.lang.String' to required type 'int'"
+   */
+  function testCommonGetVendorsDistance() {
+    $results = nyl_api_getVendors(array('near' => "{$this->latitude},{$this->longitude}"));
+
+    $this->assertTrue($this->default->totalElements > $results->totalElements, "Total Elements increase with distance.");
+    $this->assertTrue($this->default->totalPages > $results->totalPages, "Total Pages increase with distance.");
+  }
+
+  /**
+   * Check that page is zero indexed. And numberOfElement is size of content for last page
+   */
+  function testCommonGetVendorsPage() {
+    // Check next page.
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+      'page' => 1, // page is zero indexed
+    );
+    $results = nyl_api_getVendors($query);
+    $vendorIds = array_map(function($vendor) { return $vendor->id; }, $results->content);
+    $notExpected = array_map(function($vendor) { return $vendor->id; }, $this->default->content);
+    $intersect = array_intersect($vendorIds, $notExpected);
+    $this->assertTrue(empty($intersect), "Content on First page and page=1 are different.");
+
+    // Check last page.
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+      'page' => $this->default->totalPages - 1, // page is zero indexed
+    );
+    $lastPage = nyl_api_getVendors($query);
+    $this->assertFalse(empty($lastPage->content), "Last page is not empty.");
+    $remainder = $this->default->totalElements % $this->default->size;
+    $this->assertTrue($lastPage->numberOfElements == $remainder, "Size of last page matches expected.");
+
+  }
+
+  /**
+   * Default size is 20.  Default to max is 2000, if greater.
+   */
+  function testCommonGetVendorsSize() {
+    $this->assertTrue($this->default->size == count($this->default->content), "Size matches number of results");
+    $this->assertTrue($this->default->size == 20, "Default size is 20");
+
+    $size = mt_rand(10, VENDOR_API_MAX_SIZE);
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+      'size' => $size, // page is zero indexed
+    );
+    $results = nyl_api_getVendors($query);
+    $this->assertTrue($results->size == $size, "Size of result matches requested size");
+    $this->assertTrue(count($results->content) == $size, "Number of results match requested size");
+
+    // Check one pass limit will default to limit.
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+      'size' => VENDOR_API_MAX_SIZE + 1, // over limit by one.
+    );
+    $over = nyl_api_getVendors($query);
+    $this->assertTrue($over->size == VENDOR_API_MAX_SIZE, "Size is limited to ".VENDOR_API_MAX_SIZE);
+    $this->assertTrue(($result = count($over->content)) == VENDOR_API_MAX_SIZE, "Number of results is limited to ".VENDOR_API_MAX_SIZE);
+
+  }
+
+  /**
+   * Not every vendor have "Quick Draw" ["game_id": "22"],
+   * Required String parameter 'near, games, distance'
+   */
+  function testCommonGetVendorsGames()
+  {
+    $query = array(
+      'near' => "{$this->latitude},{$this->longitude}",
+      'distance' => VENDOR_API_MAX_DISTANCE,  // MAX by Java signed int [2147483647].
+      'games' => '22', // game_id of Quick Draw
+    );
+    $results = nyl_api_getVendors($query);
+    $this->assertFalse($results->totalElements == $this->default->totalElements, "Every vendor should not have 'QuickDraw'.");
+  }
+}

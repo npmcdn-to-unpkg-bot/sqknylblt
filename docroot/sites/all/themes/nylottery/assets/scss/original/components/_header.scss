@@ -1,0 +1,222 @@
+header {
+  .page > & {
+    padding-top: 0;
+
+    @include sm-tablet-up {
+      /*padding-top: 85px;*/
+    }
+  }
+
+  .home & {
+    @include slanted-bg($pale-blue, after, right);
+    margin-bottom: -14%;
+    overflow: hidden;
+    padding-bottom: 35%;
+
+    &:after {
+      top: 43%;
+    }
+
+    @include xs-mobile {
+      margin-bottom: -10%;
+      padding-bottom: 32%;
+
+      &:after {
+        top: 39%;
+      }
+    }
+
+    @include sm-tablet-up {
+      margin-bottom: -5%;
+      padding-bottom: 20%;
+
+      &:after {
+        top: 41%;
+      }
+    }
+  }
+
+  .modal-open & {
+    overflow: visible;
+  }
+}
+
+body .nygov-universal-navigation .l-header.nygov-header .pane-page-logo {
+  padding-top:0;
+  @include sm-tablet-up {
+    padding-top: 10px;
+  }
+}
+
+.nys-nav-top {
+  background-color: #FFF;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  @include value-prefixr(transition, transform 0.3s);
+  @include prefixr(transform, translate3d(0,-277px,0));
+
+  @include sm-tablet-up {
+    position: static;
+    @include prefixr(transform, translate3d(0,0,0));
+  }
+
+  .glyphicon-search {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+
+    @include sm-tablet-up {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  }
+
+  &.open {
+    @include prefixr(transform, translate3d(0,0,0));
+
+    .tray-bottom {
+      border-top: 1px solid #128ec3;
+
+      .toggle:after {
+        @include prefixr(transform, rotate(180deg));
+      }
+    }
+  }
+
+  img {
+    height: 66px;
+  }
+
+  .inner {
+    margin: 0 auto;
+    max-width: 1280px;
+    position: relative;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 40px 0;
+
+    @include sm-tablet-up {
+      float: right;
+      margin-top: 33px;
+      overflow: visible;
+      padding: 0 0 0 28px;
+      width: 82%;
+    }
+
+    li {
+      border-top: 1px solid #d9e2e2;
+      padding: 0px;
+      list-style: none;
+
+      @include sm-tablet-up {
+        border-top: 0;
+        display: inline;
+      }
+
+      &:first-child {
+        border-top: 0;
+      }
+    }
+
+    a {
+      color: #000;
+      display: block;
+      font-family: $graphik;
+      font-size: 20px;
+      padding: 20px 0;
+
+      @include sm-tablet-up {
+        color: #000;
+        display: inline;
+        font-size: 18px;
+        padding: 10px;
+        text-decoration: none;
+        transition: color .25s;
+
+        &:hover {
+          color: #0f739d;
+        }
+      }
+    }
+
+    .translate {
+      @include sm-tablet-up {
+      	padding: 0;
+        position: absolute;
+        right: 4%;
+
+        a {
+          font-size: 16px;
+          padding: 0;
+        }
+
+        a:hover {
+          color: #000;
+        }
+      }
+    }
+  }
+
+  .nys-logo {
+    display: inline-block;
+    padding: 6px 10px;
+
+    @include sm-tablet-up {
+      padding: 10px 0;
+      border: none;
+      margin: 0;
+      width: 18%;
+      text-align: center;
+      position: relative;
+      background: #fff;
+      z-index: 6;
+      border-right: solid 1px #d9e2e2;
+    }
+  }
+
+  .tray-bottom {
+    position: relative;
+
+    @include sm-tablet-up {
+      display: inline;
+    }
+
+    .toggle {
+      border-left: solid 1px #d9e2e2;
+      bottom: 12px;
+      cursor: pointer;
+      height: 55px;
+      position: absolute;
+      right: 0;
+      width: 65px;
+
+      @include md-desktop-up {
+        display: none;
+      }
+
+      &:after {
+        color: #d5820d;
+        content: '\e259';
+        display: block;
+        font: {
+          family: 'Glyphicons Halflings';
+          size: 20px;
+          weight: 400;
+        }
+        height: 55px;
+        line-height: 55px;
+        left: 50%;
+        margin-left: -9px;
+        position: absolute;
+        text-align: center;
+        @include value-prefixr(transition, transform 0.3s);
+      }
+    }
+  }
+}

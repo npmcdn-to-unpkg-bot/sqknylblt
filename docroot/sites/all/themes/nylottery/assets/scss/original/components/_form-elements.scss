@@ -1,0 +1,45 @@
+input {
+  box-shadow: none;
+}
+
+.form-item {
+  margin: rem-calc(7px) 0 rem-calc(10px);
+}
+
+.has-error .help-block {
+  @include body6;
+  background-color: $lottery-red;
+  color: $white;
+  margin: 0;
+  padding: rem-calc(5px);
+  width: rem-calc(200px);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  background-color: $pale-blue;
+  border: 0;
+  border-radius: 0;
+  font: {
+    family: $graphik;
+    size: rem-calc(12px);
+  }
+  min-width: rem-calc(200px);
+  padding: rem-calc(7px) rem-calc(10px);
+  position: relative;
+  z-index: 1;
+
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgba(0,24,67,0.5);
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    color: rgba(0,24,67,0.5);
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    color: rgba(0,24,67,0.5);
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    color: rgba(0,24,67,0.5);
+  }
+}

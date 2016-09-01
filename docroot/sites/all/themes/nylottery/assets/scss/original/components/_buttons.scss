@@ -1,0 +1,123 @@
+.btn {
+  &.active.focus, &.active:focus, &.focus, &:active.focus, &:active:focus, &:focus {
+    outline: none;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+
+  &.std {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    display: inline-block;
+    height: 3rem;
+    overflow: hidden;
+    padding: 0 .5rem .5rem 0;
+    position: relative;
+    width: 15.5rem;
+
+    &.over {
+      height: 2rem;
+      width: 10.95rem;
+      line-height: 1.8;
+
+      span {
+        height: 1.6rem;
+        width: 10.5rem;
+        font-size: 12px;
+        line-height: 2.9;
+      }
+    }
+
+    span {
+      @include h4;
+      background: $dark-teal;
+      border-radius: 0;
+      color: #FFF;
+      display: block;
+      height: 2.5rem;
+      left: 0;
+      line-height: 2.5rem;
+      position: absolute;
+      top: 0;
+      @include prefixr(transition, all ease .125s);
+      width: 15rem;
+      z-index: 3;
+
+      &:before, &:after {
+        content: '';
+        display: block;
+        position: absolute;
+      }
+
+      &:before {
+        background-color: $teal;
+        height: 4rem;
+        left: 2rem;
+        top: 100%;
+        @include prefixr(transform, skewX(45deg));
+        width: 100%;
+        z-index: 2;
+      }
+
+      &:after {
+        background-color: $dark-blue;
+        height: 100%;
+        left: 100%;
+        top: 2rem;
+        @include prefixr(transform, skewY(45deg));
+        width: 4rem;
+      }
+    }
+
+    &:hover span {
+      @include prefixr(transform, translateY(0.3rem) translateX(0.3rem));
+    }
+
+    input {
+      @include h4;
+      background: transparent;
+      border: 0;
+      color: $white;
+    }
+  }
+
+  &.filter {
+    @include h3;
+    background-color: transparent;
+    border: rem-calc(2px) solid $dark-blue;
+    border-radius: 0;
+    color: $dark-blue;
+    display: inline-block;
+    line-height: rem-calc(39px);
+    margin: rem-calc(20px) auto rem-calc(10px);
+    padding: 0;
+    width: rem-calc(197px);
+
+    &.active, &:active, &:hover {
+      background-color: $teal;
+      color: $white;
+    }
+  }
+
+  &.tray-button {
+    @include md-desktop-up {
+      background-color: $lottery-red;
+      border: rem-calc(2.5px) solid $lottery-orange;
+      border-radius: 0;
+      color: $white;
+      display: inline-block;
+      outline: rem-calc(2.5px) solid $lottery-yellow;
+      padding: rem-calc(2px) rem-calc(4px);
+
+      &:hover, &:focus {
+        background-color: $lottery-red;
+        box-shadow: none;
+        outline: rem-calc(2.5px) solid $lottery-yellow;
+        outline-offset: 0;
+      }
+    }
+  }
+}

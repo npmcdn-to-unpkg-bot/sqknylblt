@@ -1,0 +1,19 @@
+{
+  "name": "nylottery_theme",
+  "private": "true",
+  "version": "0.0.1",
+  "authors": [
+    "Pedro Rocha <pedro.br@squeaky.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "3.3.6",
+    "slick-carousel": "^1.6.0"
+  }
+}

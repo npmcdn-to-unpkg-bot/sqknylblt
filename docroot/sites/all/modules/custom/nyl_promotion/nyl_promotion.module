@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Code for the NYL Promotion feature.
+ */
+
+include_once 'nyl_promotion.features.inc';
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_promotion_theme() {
+  return [
+    'nyl_promotion_block' => array(
+      'template' => 'templates/promotion_block',
+      'variables' => [
+        'user' => null
+      ],
+    ),
+  ];
+}
+
+/**
+ * Implements hook_node_validate().
+ */
+function nyl_promotion_node_validate($node, $form, &$form_state) {
+  //server validation for text fields max length
+  if($node->type == 'promotion') {
+    $title = trim($form_state['values']['title']); //35
+    $subtitle = trim($form_state['values']['field_subtitle'][LANGUAGE_NONE][0]['value']); //80
+    $cta_text = trim($form_state['values']['field_cta_text'][LANGUAGE_NONE][0]['value']); //17
+
+    if(strlen($title) > 35) {
+      form_set_error('title', t('Title must have maximum of 35 characters'));
+    }
+    if(strlen($subtitle) > 80) {
+      form_set_error('field_subtitle', t('Sub-Title must have maximum of 80 characters'));
+    }
+    if(strlen($cta_text) > 17) {
+      form_set_error('field_cta_text', t('CTA text must have maximum of 17 characters'));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ */
+function nyl_promotion_form_node_form_alter(&$form, &$form_state, $form_id) {
+  //forcing text fields max length
+  if ($form['#node']->type == 'promotion') {
+    $form['title']['#maxlength'] = 35;
+    $form['field_subtitle'][LANGUAGE_NONE][0]['value']['#maxlength'] = 80;
+    $form['field_cta_text'][LANGUAGE_NONE][0]['value']['#maxlength'] = 17;
+  }
+}

@@ -1,0 +1,100 @@
+<?php
+/**
+ * @file
+ * Code for the NYLottery Game Matching Poll.
+ *
+ *
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function nyl_gamematch_block_info() {
+	$blocks['gamematch'] = array(
+    'info' => t('Game Match'),
+    'region' => 'content',
+    'status' => 1,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nyl_gamematch_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'gamematch':
+      $block['content'] = nyl_gamematch_block_content();
+      break;
+
+  }
+  return $block;
+}
+
+function nyl_gamematch_block_content() {
+	drupal_add_js(array('nyl_gamematch' => array('frequency' => '')), 'setting');
+	drupal_add_js(drupal_get_path('module', 'nyl_gamematch') .'/nyl_gamematch.js');
+	drupal_add_css(drupal_get_path('module', 'nyl_gamematch') .'/nyl_gamematch.css');
+
+	$map = array(
+		'frequency' => array(
+			'high' => array('high-a1', 'high-a2'),
+			'medium' => array('med-a1', 'med-a2'),
+			'low' => array('low-a1', 'low-a2')
+		),
+		'prize' => array(
+			'big' => array('big-a1', 'big-a2'),
+			//'medium' => array(),
+			'small' => array('small-a1', 'small-a2')
+		),
+		'probability' => array(
+			'low' => array('low-b1', 'low-b2'),
+			'high' => array('high-b1', 'high-b2', 'high-b3')
+		)
+	);
+	drupal_add_js(array('nyl_gamematch_map' => $map), 'setting');
+	drupal_add_js(array('nyl_gamematch_container' => array()), 'setting');
+
+	return drupal_get_form('nyl_gamematch_form');
+}
+
+function nyl_gamematch_form($form, &$form_state) {
+
+  $form['#attributes'] = array('id' => array('gm-form'));
+
+	$form['gamematch']['frequency'] = array(
+		'#type' => 'radios',
+		'#title' => t('How often do you check your like count when you post a new profile picture?'),
+		'#options' => array(
+			'high' => t('Every hour'),
+			'medium' => t('Every day'),
+			'low' => t('Every few days')
+		),
+	);
+
+	$form['gamematch']['prize'] = array(
+		'#type' => 'radios',
+		'#title' => t('Do you want a big vacation once a year, or many smaller weekend getaways?'),
+		'#options' => array(
+			'big' => t('Big vacation once a year'),
+			'small' => t('Many smaller weekend getaways')
+		),
+	);
+
+	$form['gamematch']['probability'] = array(
+		'#type' => 'radios',
+		'#title' => t('Do you always sniff the milk?'),
+		'#options' => array(
+			'low' => t('Yes'),
+			'high' => t('No')
+		),
+	);
+
+	$form['gamematch']['results'] = array(
+		'#markup' => '<div id="gm_results" class="form-item">Results</div>',
+	);
+
+  return $form;
+}

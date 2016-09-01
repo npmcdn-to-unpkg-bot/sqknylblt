@@ -1,0 +1,372 @@
+.slider {
+  visibility: hidden;
+}
+
+.slider.main {
+  height: rem-calc(220px);
+
+  .slick-list {
+    overflow: visible;
+  }
+
+  .slick-slide {
+    @include vertical-align-parent;
+    height: rem-calc(210px);
+
+    .logo {
+      margin: rem-calc(10px) auto;
+      max-width: rem-calc(100px);
+    }
+
+    .inner {
+      @include vertical-align;
+      @include graphik(18px, 1, 800);
+      text-align: center;
+
+      p {
+        @include subheader2;
+        margin: 0 0 rem-calc(20px) 0;
+        text-shadow: rem-calc(-2px) rem-calc(2px) 0 $teal;
+
+        @include sm-tablet-up {
+          font-size: rem-calc(24px);
+          margin: rem-calc(20px) 0;
+        }
+      }
+
+      .jackpot-amount, .cardinal {
+        display: block;
+        line-height: 0.85;
+      }
+
+      .jackpot-amount {
+        @include feature1;
+
+        span {
+          @extend .currency;
+        }
+      }
+
+      .cardinal {
+        @include feature2;
+      }
+
+      .jackpot-amount, .cardinal {
+        @include sm-tablet-up {
+          display: inline;
+          font-size: rem-calc(68px);
+        }
+      }
+
+      .larger {
+        @include feature2;
+        display: block;
+        line-height: 1.1;
+
+        @include sm-tablet-up {
+          font-size: rem-calc(68px);
+        }
+      }
+    }
+  }
+
+  &.welcome .inner p {
+    margin: rem-calc(15px) 0;
+  }
+}
+
+.slider-mobile-only > div {
+  @include sm-tablet-up {
+    display: inline-block;
+    margin: 0 2.5%;
+    width: 40%;
+  }
+}
+
+.slider-mobile-only.promo {
+  .slick-slide {
+    @include vertical-align-parent;
+
+    .inner {
+      @include vertical-align;
+    }
+  }
+
+  &, .slick-slide {
+    height: rem-calc(275px);
+    margin-bottom: 0;
+
+    @include sm-tablet-up {
+      height: auto;
+    }
+  }
+
+  .slick-dots {
+    bottom: -7vw;
+  }
+}
+
+.promotions {
+  @include slanted-bg($white, before, left);
+  background: {
+    color: transparent;
+    position: 83vw top;
+    repeat: no-repeat;
+    size: auto 100%;
+  }
+  margin-bottom: -1px;
+  padding-top: 0;
+  position: relative;
+  text-align: center;
+
+  @include xs-mobile-up {
+    padding-top: 0;
+  }
+
+  @include sm-tablet-up {
+    background-position: 91vw top;
+    padding-top: 0;
+  }
+
+  &:before {
+    z-index: 0;
+  }
+
+  p {
+    @include body2;
+  }
+
+  .subheader2 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+  }
+
+  .content {
+    padding: 20vw 20vw 25vw;
+
+    @include sm-tablet-up {
+      padding: 10vw 10vw 15vw;
+    }
+
+    @include md-desktop-up {
+      padding: 10vw 10vw 11vw;
+    }
+  }
+}
+
+.beach {
+  background: {
+    image: url(../img/beach.png);
+    position: -36vw 110%;
+    repeat: no-repeat;
+    size: 200% auto;
+  }
+  position: relative;
+
+  @include sm-tablet-up {
+    background: {
+      position: center 112%;
+      size: 150% auto;
+    }
+  }
+
+  @include md-desktop-up {
+    background: {
+      position: center 107%;
+      size: 100% auto;
+    }
+  }
+}
+
+.game-match {
+  @include slanted-bg($lottery-blue, after, right);
+  margin-bottom: rem-calc(-25px);
+  min-height: rem-calc(600px);
+  padding-bottom: 14%;
+  text-align: center;
+
+  @include xs-mobile {
+    padding-bottom: 14%;
+  }
+
+  @include sm-tablet-up {
+    @include vertical-align-parent;
+    margin-bottom: rem-calc(10px);
+    min-height: rem-calc(450px);
+  }
+
+  @include lg-desktop {
+    min-height: rem-calc(400px);
+  }
+
+  .inner {
+    padding: rem-calc(65px) rem-calc(50px) rem-calc(12px);
+
+    @include sm-tablet-up {
+      @include vertical-align(absolute);
+      left: 0;
+      margin: 0;
+      padding: 0 rem-calc(50px);
+      top: 38%;
+    }
+  }
+
+  .spinner {
+    bottom: rem-calc(-20px);
+    left: 0;
+    padding: 0 rem-calc(12px);
+    position: absolute;
+    width: 100%;
+
+    @include sm-tablet-up {
+      left: auto;
+      right: 0;
+      width: 60%;
+    }
+
+    @include md-desktop-up {
+      bottom: 0;
+      padding: 0 rem-calc(50px) 0 0;
+    }
+
+    @include lg-desktop {
+      width: 55%;
+    }
+
+    img {
+      max-width: rem-calc(400px);
+      width: 100%;
+
+      @include lg-desktop {
+        max-width: rem-calc(320px);
+      }
+    }
+  }
+}
+
+.lottery-legends {
+  @include slanted-bg($white, before, left);
+  padding-top: 0;
+  position: relative;
+  text-align: center;
+
+  @include xs-mobile-up {
+    padding-top: 0;
+  }
+
+  @include sm-tablet-up {
+    padding-top: 0;
+  }
+
+  &:before {
+    top: rem-calc(-120px);
+    z-index: 0;
+
+    @include sm-tablet-up {
+      top: rem-calc(-50px);
+    }
+  }
+
+  .content {
+    margin: 8vw auto rem-calc(100px);
+
+    @include sm-tablet-up {
+      @include vertical-align-parent;
+      margin: 0 auto rem-calc(20px);
+    }
+  }
+
+  .lottery-content {
+    @include sm-tablet-up {
+      @include vertical-align;
+      margin-bottom: rem-calc(140px);
+      padding: 0 rem-calc(40px);
+      position: absolute;
+      right: 0;
+      top: 45%;
+    }
+  }
+}
+
+.videos {
+  @include slanted-bg($pale-blue, before, right);
+  background: {
+    image: url(../img/liberty.png);
+    position: left 100%;
+    repeat: no-repeat;
+    size: auto 70%;
+  }
+  box-sizing: content-box;
+  padding-bottom: 0;
+  position: relative;
+  text-align: center;
+
+  @include xs-mobile {
+    background: {
+      position: left 110%;
+      size: auto 80%;
+    }
+  }
+
+  @include sm-tablet-up {
+    background: {
+      position: left 110%;
+      size: auto 85%;
+    }
+  }
+
+  @include md-desktop-up {
+    background-size: auto 90%;
+  }
+
+  .content {
+    padding: rem-calc(25px) rem-calc(70px);
+
+    @include sm-tablet-up {
+      padding: rem-calc(25px) rem-calc(90px);
+    }
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    height: rem-calc(100px);
+
+    @include md-desktop-up {
+      height: rem-calc(170px);
+    }
+  }
+}
+
+.video-thumbnail {
+  margin: rem-calc(30px) 0 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  -webkit-backface-visibility: hidden;
+
+  @include xs-mobile-up {
+    margin: 0;
+  }
+
+  &:after {
+    background: {
+      image: url(../img/video-play.png);
+      repeat: no-repeat;
+      size: cover;
+    }
+    content: '';
+    display: block;
+    height: rem-calc(70px);
+    left: 50%;
+    margin: rem-calc(-35px) 0 0 rem-calc(-35px);
+    position: absolute;
+    top: 50%;
+    width: rem-calc(70px);
+  }
+
+  img {
+    width: 100%;
+  }
+}

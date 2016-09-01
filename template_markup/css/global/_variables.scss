@@ -1,0 +1,40 @@
+// Responsive Breakpoints
+$xs-width: 480px;
+$sm-width: 768px;
+$md-width: 992px;
+$lg-width: 1200px;
+
+$root-font-size: 10px;
+
+// Primary Colors
+$lottery-blue: #0A64AF;
+$pale-blue: #F0F7FC;
+$white: #FFF;
+
+// Secondary Colors
+$dark-blue: #092246;
+$lottery-red: #EE3D42;
+$lottery-orange: #F3793E;
+$lottery-yellow: #FFDF1B;
+
+// Accent Colors
+$dark-teal: #084267;
+$teal: #52C7F3;
+$gray: #D7D7D7;
+$gold: #E3A021;
+
+// NYS Nav Colors
+$nys-dark-gray: #333;
+
+// Component Colors
+// Ribbons
+$ribbon-light-blue: #5AC8F2;
+
+$ribbon-default: $ribbon-light-blue !default;
+$ribbon-default-text: $white !default;
+
+$plaque-bg-color: #FCCC43;
+$plaque-border-color: #403122;
+
+// Fonts
+$graphik: Graphik, Helvetica, Arial, sans-serif;

@@ -1,0 +1,159 @@
+<?php
+/**
+ * @file
+ * Code for the NYLottery Winning Numbers Overlay.
+ */
+include_once 'includes/nyl_winning_numbers_json.inc';
+
+
+/**
+ * Implement hook_theme();
+ * @return array
+ */
+function nyl_winning_numbers_theme() {
+  $module_path = drupal_get_path('module', 'nyl_winning_numbers');
+  $themes =  array();
+  $themes['nyl_winning_numbers_tray'] = array(
+    'template' => 'nyl-winning-numbers-tray',
+    'path' => $module_path.'/templates',
+    'variables' => array('nodes' => array(), 'promos' => array(), 'refresh' => false),
+  );
+
+  $draw_games = array("Mega Millions", "Lotto", "Power ball", "Cash 4 Life", "Take 5", "Numbers", "Win 4", "Quick Draw", "Pick 10" );
+  foreach($draw_games as $game) {
+    $name = strtolower(str_replace(' ', '', $game));
+    $themes["nyl_winning_numbers_{$name}_draw"] = array(
+      'template' => "nyl-winning-numbers-{$name}-draw",
+      'path' => $module_path . '/templates',
+      'variables' => array('node' => NULL, 'size' => 'sm', 'draws' => array()),
+    );
+  }
+  return $themes;
+}
+/**
+ * Implement hook_menu
+ * @return mixed
+ */
+function nyl_winning_numbers_menu() {
+  $module_path = drupal_get_path('module', 'nyl_winning_numbers');
+  $items['nyl_winning_numbers/getTray.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_winning_numbers_getOverlay_json',
+    'page arguments' => array(false),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path . '/includes',
+    'file' => 'nyl_winning_numbers_json.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function nyl_winning_numbers_flush_caches() {
+  return array(NYL_WINNING_NUMBERS_CACHE_BIN);
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function nyl_winning_numbers_block_info() {
+  $blocks = array();
+  $blocks['nyl_winning_numbers_block'] = array(
+    'info' => t('Nav : Winning Numbers Block'),
+    'cache' => DRUPAL_CACHE_GLOBAL, // The block is the same for every user on every page where it is visible.
+  );
+  return $blocks;
+}
+
+
+/**
+ * Implements hook_block_view().
+ */
+function nyl_winning_numbers_block_view($delta='') {
+  $block = array();
+
+  switch($delta) {
+    case 'nyl_winning_numbers_block';
+      $block['content'] = array(
+        '#theme' => 'nyl_winning_numbers_tray',
+        '#nodes' => nyl_winning_numbers_getDrawGames(),
+        '#promos' => nyl_winning_numbers_getPromoLinks(),
+      );
+      break;
+  }
+  return $block;
+}
+
+function nyl_winning_numbers_init() {
+  drupal_add_js(drupal_get_path('module', 'nyl_winning_numbers') . '/js/nyl_winning_numbers.js');
+  // TODO move or separate CSS.
+  drupal_add_css(drupal_get_path('module', 'nyl_winning_numbers') . '/css/nyl_winning_numbers.css');
+}
+
+/**
+ * Get a list of Draw Games ordered by NYLAPI rank.
+ * @return mixed
+ * @throws \EntityFieldQueryException
+ */
+function nyl_winning_numbers_getDrawGames() {
+  watchdog('debug', 'nyl_winning_numbers_getDrawGames');
+  // $draw_games = node_load_multiple(array(), array('type' => 'draw_game', 'status' => 1));
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', array('draw_game'))
+    ->fieldOrderBy('field_draw_game_rank', 'value', 'ASC');
+  $result = $query->execute();
+  $draw_games = node_load_multiple(array_keys($result['node']));
+  return $draw_games;
+}
+
+/**
+ * Get List of links to active Promotions, indexed by the Node Id that was referenced by the Promotion.
+ * @return array
+ */
+function nyl_winning_numbers_getPromoLinks() {
+  if (! module_exists('nyl_promotion')) {
+    return array();
+  }
+  $return = array();
+  $today = date("Y-m-d");
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', array('promotion'))
+     ->fieldCondition('field_game', 'target_id', 'NULL', '!=')
+    // TODO add back in when feature is updated.
+//     ->fieldCondition('field_promo_date', 'value', $today, '<=') // starts today
+//     ->fieldCondition('field_promo_date', 'value2', $today, '>=') // end date today; // has a entity reference to a draw_game.
+  ;
+  $result = $query->execute();
+  if (!empty($result['node'])) {
+    $promos = node_load_multiple(array_keys($result['node']));
+    foreach($promos as $nid => $node) {
+      // since we checked that the target_id was not null
+      $references = $node->field_game['und'];
+      foreach($references as $ref) {
+        // TODO : confirm with client where this link should go.
+//      $return[$ref['target_id']] = l(t('Promo!'), '/events/all', array(
+//        'attributes' => array(
+//          'class' => 'promo-link',
+//          'target'=>'_blank', // If your already on the page, you don't see anything.
+//        ),
+//        'fragment' => 'node-'.$nid,
+//      ));
+// OR.....
+        $return[$ref['target_id']] = l(t('PROMO!'), '/node/'.$nid, array(
+          'attributes' => array(
+            'class' => 'promo-link',
+            'target'=>'_blank', // If your already on the page, you don't see anything.
+          ),
+        ));
+      }
+    }
+  }
+
+  return $return;
+}

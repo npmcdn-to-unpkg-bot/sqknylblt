@@ -1,0 +1,184 @@
+footer {
+  background: $lottery-blue;
+  margin-top: -1px;
+  position: relative;
+  width: 100%;
+
+  .home > &:before {
+    background: {
+      image: url(../img/nyc-landscape.png);
+      position: bottom center;
+      size: auto 100%;
+    }
+    content: '';
+    display: block;
+    height: rem-calc(150px);
+    left: 0;
+    position: absolute;
+    top: rem-calc(-150px);
+    width: 100%;
+
+    @include sm-tablet-up {
+      height: rem-calc(160px);
+      top: rem-calc(-160px);
+    }
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ny-lottery, .nys-footer .container {
+    @include md-desktop-up {
+      padding-left: rem-calc(70px);
+      padding-right: rem-calc(70px);
+    }
+  }
+
+  .ny-lottery {
+    padding-top: rem-calc(20px);
+    padding-bottom: rem-calc(50px);
+
+    .newsletter, .get-app, .social, nav {
+      margin-bottom: rem-calc(30px);
+
+      @include sm-tablet-up {
+        display: inline-block;
+        margin-bottom: rem-calc(20px);
+      }
+    }
+
+    .newsletter {
+      @include sm-tablet-up {
+        float: left;
+      }
+    }
+
+    .get-app, .social {
+      @include sm-tablet-up {
+        clear: right;
+        float: right;
+        min-width: rem-calc(210px);
+        width: 40%;
+      }
+    }
+
+    nav {
+      @include sm-tablet-up {
+        clear: both;
+        display: block;
+      }
+
+      li {
+        @include h4;
+      }
+    }
+
+    h4 {
+      margin: 0 0 rem-calc(7px) 0;
+    }
+
+    .copyright p {
+      @include body5;
+    }
+  }
+
+  .nys-footer {
+    background-color: $nys-dark-gray;
+    padding-bottom: 50px;
+    padding-top: 25px;
+
+    @include sm-tablet-up {
+      padding-bottom: 18px;
+      padding-top: 18px;
+    }
+
+    > img, nav {
+      @include sm-tablet-up {
+        display: inline-block;
+      }
+    }
+
+    img {
+      margin-bottom: 20px;
+
+      @include sm-tablet-up {
+        margin-bottom: 0;
+        margin-top: 8px;
+      }
+    }
+
+    nav {
+      @include sm-tablet-up {
+        float: right;
+        width: 83%;
+      }
+
+      li {
+        display: inline-block;
+        margin: 7px 0;
+        width: 49%;
+
+        @include sm-tablet-up {
+          margin: 5px 0.63% 5px 0;
+          width: 18%;
+        }
+      }
+
+      a {
+        @extend .text-white;
+        font-family: $graphik;
+        font-size: 14px;
+
+        @include sm-tablet-up {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+.apple-app-store, .google-play, .twitter, .facebook, .instagram {
+  background: {
+    position: center center;
+    repeat: no-repeat;
+    size: contain;
+  }
+  display: inline-block;
+}
+
+.apple-app-store, .twitter, .facebook {
+  margin-right: rem-calc(18px);
+}
+
+.apple-app-store, .google-play {
+  height: rem-calc(33px);
+  width: rem-calc(90px);
+}
+
+.apple-app-store {
+  background-image: url('../img/apple-app-store.png');
+}
+
+.google-play {
+  background-image: url('../img/google-play.png');
+}
+
+.twitter, .facebook, .instagram {
+  height: rem-calc(25px);
+  width: rem-calc(25px);
+}
+
+.twitter {
+  background-image: url('../img/twitter.png');
+}
+
+.facebook {
+  background-image: url('../img/facebook.png');
+}
+
+.instagram {
+  background-image: url('../img/instagram.png');
+}

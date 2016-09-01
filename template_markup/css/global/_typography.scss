@@ -1,0 +1,180 @@
+// Because @extend doesn't work inside of media queries and the spec requires different styles on certain elements per breakpoint, we have to seperate them out as mixins instead of classes that can be extended.
+@mixin feature1 {
+  @include graphik(68px, rem-calc(70px), 800);
+  text-transform: uppercase;
+}
+
+@mixin feature2 {
+  @include graphik(41px, rem-calc(43px), 800);
+  text-transform: uppercase;
+}
+
+@mixin header {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+@mixin h1 {
+  @include header;
+  @include graphik(24px, rem-calc(24px), 800);
+}
+
+@mixin h2 {
+  @include header;
+  @include graphik(18px, rem-calc(20px), 800);
+}
+
+@mixin h3 {
+  @include header;
+  @include graphik(12px, rem-calc(16px), 800);
+}
+
+@mixin h4 {
+  @include header;
+  @include graphik(10px, rem-calc(16px), 800);
+}
+
+@mixin subheader1 {
+  @include graphik(18px, rem-calc(20px), 600);
+  text-transform: uppercase;
+}
+
+@mixin subheader2 {
+  @include graphik(16px, rem-calc(18px), 800);
+  margin: rem-calc(15px) 0;
+  text-transform: uppercase;
+}
+
+@mixin subheader3 {
+  @include graphik(8px, rem-calc(9px), 800);
+  text-transform: uppercase;
+}
+
+@mixin detail1 {
+  @include graphik(12px, rem-calc(16px), 600);
+  text-transform: uppercase;
+}
+
+@mixin detail2 {
+  @include graphik(10px, rem-calc(16px), 600);
+  text-transform: uppercase;
+}
+
+@mixin detail3 {
+  @include graphik(8px, rem-calc(9px), 600);
+  text-transform: uppercase;
+}
+
+@mixin detail4 {
+  @include graphik(6px, rem-calc(7px), 800);
+  text-transform: uppercase;
+}
+
+@mixin body1 {
+  @include graphik(16px, rem-calc(18px), 400);
+}
+
+@mixin body2 {
+  @include graphik(14px, rem-calc(20px), 400);
+  margin: rem-calc(15px) 0;
+}
+
+@mixin body3 {
+  @include graphik(12px, rem-calc(16px), 400);
+}
+
+@mixin body4 {
+  @include graphik(10px, rem-calc(16px), 400);
+}
+
+@mixin body5 {
+  @include graphik(9px, rem-calc(11px), 400);
+}
+
+@mixin body6 {
+  @include graphik(8px, rem-calc(10px), 400);
+}
+
+@mixin body7 {
+  @include graphik(7px, rem-calc(20px), 400);
+}
+
+.feature1 {
+  @include feature1;
+}
+
+.feature2 {
+  @include feature2;
+}
+
+h1, .header1 {
+  @include h1;
+}
+
+h2, .header2 {
+  @include h2;
+}
+
+h3, .header3 {
+  @include h3;
+}
+
+h4, .header4 {
+  @include h4;
+}
+
+.subheader1 {
+  @include subheader1;
+}
+
+.subheader2 {
+  @include subheader2;
+}
+
+.subheader3 {
+  @include subheader3;
+}
+
+.detail1 {
+  @include detail1;
+}
+
+.detail2 {
+  @include detail2;
+}
+
+.detail3 {
+  @include detail3;
+}
+
+.detail4 {
+  @include detail4;
+}
+
+.body1 {
+  @include body1;
+}
+
+.body2 {
+  @include body2;
+}
+
+.body3 {
+  @include body3;
+}
+
+.body4 {
+  @include body4;
+}
+
+.body5 {
+  @include body5;
+}
+
+.body6 {
+  @include body6;
+}
+
+.body7 {
+  @include body7;
+}

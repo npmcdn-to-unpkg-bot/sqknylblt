@@ -1,0 +1,30 @@
+
+
+.ui-addtocal {
+  cursor:pointer;cursor:hand;
+}
+
+ul.ui-addtocal {
+  cursor:default;
+  position:absolute;
+  list-style: none;
+  list-style-position: outside;
+  padding: 5px;
+}
+
+.ui-widget-content {
+  background: #fff;
+}
+
+.ui-widget-content .ui-state-hover {
+  background: none;
+	border: none;
+}
+
+.ui-widget-content a {
+	font-size: 12px;
+}
+
+.addtocal.calbutton div {
+	display: none;
+}

@@ -1,0 +1,12 @@
+name = NYLottery Drawing Results
+description = NYLottery Drawing Results for draw_game node pages.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.2
+dependencies[] = date_popup
+dependencies[] = elements
+dependencies[] = jquery_update
+dependencies[] = nyl_draw
+files[] = includes/nyl_drawing_results.inc
+files[] = includes/nyl_drawing_results_json.inc
+project path = sites/all/modules/custom

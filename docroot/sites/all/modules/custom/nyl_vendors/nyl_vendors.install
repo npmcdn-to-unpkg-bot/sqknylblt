@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Contains nyl_vendors.install
+ */
+/**
+ * Implementation of hook_schema().
+ * -- https://rapiddg.com/blog/introduction-drupal-7s-cache-api
+ */
+function nyl_vendors_schema() {
+  $schema = array();
+  $schema['cache_nyl_vendors'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}

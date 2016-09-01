@@ -1,0 +1,97 @@
+<?php
+/**
+ * @file
+ * Code for the NYLottery Core feature.
+ */
+
+include_once 'nyl_core.features.inc';
+
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_core_theme() {
+  return [
+    'nyl_core_homepage' => array(
+      'template' => 'templates/homepage',
+      'variables' => [
+        'user' => null
+      ],
+    ),
+    'nyl_core_home_video_campaign' => array(
+      'template' => 'templates/home_video_campaign',
+      'variables' => [
+        'user' => null
+      ],
+    ),
+    'nyl_core_home_main_slider' => array(
+      'template' => 'templates/home_main_slider',
+      'variables' => [
+        'user' => null
+      ],
+    ),
+    'nyl_footer_block' => array(
+      'template' => 'templates/nyl-footer-block',
+      'variables' => array(
+        'menu' => array(),
+        'site_disclaimer' => '',
+      )
+    ),
+  ];
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function nyl_core_block_info() {
+  $blocks = array();
+  $blocks['nyl_core_footer'] = array(
+    'info' => t('NYL - Footer Block'),
+    'cache' => DRUPAL_CACHE_GLOBAL, // The block is the same for every user on every page where it is visible.
+    'status' => TRUE,
+    'region' => 'footer',
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function nyl_core_block_view($delta='') {
+  $block = array();
+
+  switch($delta) {
+    case 'nyl_core_footer';
+      $parent =  menu_link_get_preferred(drupal_get_normal_path('ways-to-play'), 'main-menu');
+      $variables['menu'] = menu_build_tree('main-menu', array(
+          'active_trail' => array($parent['plid']),
+          'only_active_trail' => FALSE,
+          'min_depth' => $parent['depth'] + 1,
+          'expanded' => array($parent['mlid']),
+          'conditions' => array('plid' => $parent['mlid']),
+        )
+      );
+      $variables['site_disclaimer'] = variable_get('nyl_site_disclaimer', '');
+      //
+      $block['content'] = theme('nyl_footer_block', $variables);
+      break;
+  }
+  return $block;
+}
+
+
+function nice_number($n, $precision = 2) {
+  // first strip any ',' formatting;
+  $n = (0+str_replace(",", "", $n));
+
+  // is this a number?
+  if (!is_numeric($n)) return false;
+
+  // now filter it;
+  if ($n > 1000000000000) { return round(($n/1000000000000), $precision) . ' Trillion'; }
+  elseif ($n > 1000000000) { return round(($n/1000000000), $precision) . ' Billion'; }
+  elseif ($n > 1000000) { return round(($n/1000000), $precision) . ' Million'; }
+  elseif ($n > 1000) { return round(($n/1000), $precision) . ' Thousand'; }
+
+  return number_format($n);
+}

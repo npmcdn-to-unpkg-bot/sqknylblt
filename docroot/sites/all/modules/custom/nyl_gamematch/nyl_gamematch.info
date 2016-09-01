@@ -1,0 +1,9 @@
+name = NYLottery Game Matcher
+description = Provides poll questions to match games to personality.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.1
+
+#dependencies[] = simpletest
+
+files[] = includes/nyl_gamematch.inc

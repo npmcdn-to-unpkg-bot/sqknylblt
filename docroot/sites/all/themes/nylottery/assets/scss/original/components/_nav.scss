@@ -1,0 +1,246 @@
+.navbar {
+  background: $lottery-blue;
+  margin: 0;
+  z-index: 10;
+
+  @include md-desktop-up {
+    background: transparent;
+    padding-bottom: rem-calc(5px);
+    padding-top: rem-calc(5px);
+
+    a {
+      color: $dark-teal;
+
+      .bg-indigo & {
+        color: $white;
+      }
+
+      &.active {
+        color: $lottery-yellow;
+      }
+    }
+  }
+}
+
+.navbar-nav {
+  margin: 0;
+
+  @include md-desktop-up {
+    float: none;
+    text-align: center;
+  }
+
+  > li {
+    @include md-desktop-up {
+      display: inline-block;
+      float: none;
+    }
+
+    .modal-nav-content & {
+      @include md-desktop-up {
+        display: block;
+        float: none;
+      }
+    }
+  }
+}
+
+.nav > li > a {
+  @include subheader2;
+
+  &:hover, &:focus {
+    background: transparent;
+  }
+
+  @include md-desktop-up {
+    @include subheader3;
+    margin: 0 rem-calc(4px);
+    padding: rem-calc(6px);
+  }
+
+  &.search {
+    font-size: rem-calc(15px);
+    line-height: rem-calc(9px);
+    position: relative;
+    top: rem-calc(2px);
+  }
+
+  .ways-to-play-icon {
+
+  }
+
+  // &.ways-to-play {
+  //   @include md-desktop-up {
+  //     background: {
+  //       image: url(../img/ways-to-play-icon.svg);
+  //       position: right center;
+  //       repeat: no-repeat;
+  //       size: 9px 9px;
+  //     }
+  //     outline: none;
+  //     padding-right: rem-calc(8px);
+  //   }
+
+  //   @include lg-desktop {
+  //     background-size: 12px 12px;
+  //     padding-right: rem-calc(9px);
+  //   }
+  // }
+}
+
+.navbar-toggle {
+  background-color: $dark-blue;
+  padding: rem-calc(20px) rem-calc(16px);
+  margin: 0;
+  border-radius: 0;
+  z-index: 2;
+  position: relative;
+
+  .icon-bar {
+    height: rem-calc(3px);
+    width: rem-calc(32px);
+
+    & + .icon-bar {
+      margin-top: rem-calc(3px);
+    }
+
+    &:nth-child(2) {
+      @include graphik(9.5px, 0.75, 800);
+      color: $lottery-yellow;
+      height: auto;
+      margin-left: rem-calc(-1px);
+    }
+
+    &:nth-child(3) {
+      background: $lottery-orange;
+    }
+
+    &:nth-child(4) {
+      background: $lottery-red;
+    }
+  }
+}
+
+.navbar-header {
+  min-width: rem-calc(310px);
+}
+
+.navbar-brand {
+  padding: 0;
+  margin: rem-calc(8px) rem-calc(15px) 0 0;
+}
+
+.modal-dialog {
+  @include vertical-align-parent;
+  height: 100vh;
+  margin: 0;
+
+  @include md-desktop-up {
+    width: 100%;
+  }
+
+  button[data-target="#navModal"] {
+    @include btnx;
+    height: rem-calc(32px);
+    position: absolute;
+    right: rem-calc(10px);
+    width: rem-calc(32px);
+    top: rem-calc(10px);
+  }
+}
+
+.modal-nav-content {
+  @include vertical-align(absolute);
+  left: 0;
+  width: 100%;
+
+  .nav > li {
+    line-height: 0.75;
+    margin: 5vh;
+    text-align: center;
+
+    &, a {
+      @include subheader2;
+      color: $white;
+    }
+  }
+}
+
+.nav-modal {
+  // [TODO] - This is temporary until we switch it out with the animated version.
+  background: $lottery-yellow; /* Old browsers */
+  background: -moz-linear-gradient(135deg, $lottery-yellow 0%, $lottery-yellow 20%, $lottery-orange 20%, $lottery-orange 40%, $lottery-red 40%, $lottery-red 60%, $lottery-orange 60%, $lottery-orange 80%, $lottery-yellow 80%, $lottery-yellow 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(135deg, $lottery-yellow 0%, $lottery-yellow 20%, $lottery-orange 20%, $lottery-orange 40%, $lottery-red 40%, $lottery-red 60%, $lottery-orange 60%, $lottery-orange 80%, $lottery-yellow 80%, $lottery-yellow 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, $lottery-yellow 0% ,$lottery-yellow 20%, $lottery-orange 20% ,$lottery-orange 40% ,$lottery-red 40%, $lottery-red 60%, $lottery-orange 60%, $lottery-orange 80%, $lottery-yellow 80%, $lottery-yellow 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#{$lottery-yellow}, endColorstr=#{$lottery-yellow}, GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  overflow-y: hidden;
+  height: 100vh;
+  padding-right: 0;
+}
+
+.nav-modal.in {
+  background-position: 0 0;
+  box-sizing: content-box;
+  width: 100%;
+}
+
+.nav-modal.first {
+  background: -moz-linear-gradient(135deg, $lottery-yellow 0%, $lottery-yellow 50%, rgba(255, 255, 255, 0) 50%, transparent 100%);
+
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(135deg, $lottery-yellow 0%, $lottery-yellow 50%, rgba(255, 255, 255, 0) 50%, transparent 100%);
+
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, $lottery-yellow 0%, $lottery-yellow 50%, rgba(255, 255, 255, 0) 50%, transparent 100%);
+
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background-position: 100% 0;
+  background-size: 400% 100%;
+  transition: all 2s ease-in;
+  overflow-y: hidden;
+  height: 100vh;
+  padding-right: 0;
+}
+
+.navbar-collapse {
+  @include sm-tablet-up {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.container-dropdown {
+  position: relative;
+  text-align: center;
+
+  .btn {
+    background: transparent;
+    color: $lottery-yellow;
+    margin-top: rem-calc(12px);
+
+    @include sm-tablet-up {
+      margin-top: rem-calc(16px);
+    }
+  }
+
+  .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}
+
+.navbar-collapse {
+  background: $lottery-red;
+  position: absolute;
+  width: 100%;
+
+  @include sm-tablet-up {
+    background: transparent;
+    position: relative;
+  }
+
+  a {
+    color: $white;
+  }
+}

@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * Contains nyl_draw.install.
+ */
+
+/**
+ * Implementation of hook_schema().
+ * -- https://rapiddg.com/blog/introduction-drupal-7s-cache-api
+ */
+function nyl_draw_schema() {
+  $schema = array();
+  $schema['cache_nyl_draw'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
+/**
+ * Create cache table
+ */
+function nyl_draw_update_7005() {
+  if (! db_table_exists('cache_nyl_draw')) {
+    $schema['cache_nyl_draw'] = drupal_get_schema_unprocessed('system', 'cache');
+    db_create_table('cache_nyl_draw', $schema['cache_nyl_draw']);
+  }
+}

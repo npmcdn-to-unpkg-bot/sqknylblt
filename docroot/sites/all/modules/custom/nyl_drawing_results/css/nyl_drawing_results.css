@@ -1,0 +1,42 @@
+
+section#block-nyl-drawing-results-nyl-drawing-results-previous,
+section#block-nyl-drawing-results-nyl-drawing-results-block {
+    background-color: lightgrey;
+}
+
+.ticket {
+    height: 38px;
+}
+
+.exactMatch.wagerMatch,
+.exactMatch {
+    font-family: Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #5C9BC7;
+}
+
+.wagerMatch {
+    font-family: Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: deeppink;
+}
+
+span.bonus,
+span.circle {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* For Internet Explorer 6-9 */
+
+    width: 30px;
+    height: 30px;
+    padding: 8px;
+
+    color: #fff;
+    border: 2px solid #666;
+    background: #666;
+    text-align: center;
+}
+

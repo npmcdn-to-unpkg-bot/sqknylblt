@@ -1,0 +1,119 @@
+<?php
+require_once(drupal_get_path('module', 'location').'/supported/location.us.inc');
+require_once(drupal_get_path('module', 'nyl_vendors').'/includes/nyl_vendors.inc');
+/**
+ * @file
+ * Contains nyl_vendors.module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function nyl_vendors_menu() {
+
+  $module_path = drupal_get_path('module', 'nyl_vendors');
+
+  $items['Lottery_Locator'] = array(
+    'title' => 'Lottery Locator',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nyl_vendors_form'),
+    'access callback' => TRUE,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+    'file path' => $module_path . '/includes',
+    'file' => 'nyl_vendors.inc',
+  );
+  $items['nyl_vendors/%nyl_vendors_zipCode/getList.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_vendors_list',
+    'page arguments' => array(1, false),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path . '/includes',
+    'file' => 'nyl_vendors.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_vendors_theme() {
+  $module_path = drupal_get_path('module', 'nyl_vendors');
+  return array(
+    'nyl_vendors_retailer' => array(
+      'template' => 'nyl-vendors-retailer',
+      'path' => $module_path . '/templates',
+      'variables' => array('retailer' => null),
+    ),
+    'nyl_vendors_list' => array(
+      'template' => 'nyl-vendors-list',
+      'path' => $module_path . '/templates',
+      'variables' => array('vendors' => array()),
+    ),
+    'nyl_vendors_gmap' => array(
+      'template' => 'nyl-vendors-gmap',
+      'path' => $module_path . '/templates',
+      'variables' => array('center' => array(), 'markers' => array(), 'events' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function nyl_vendors_help($route_name) {
+  switch ($route_name) {
+    // Main module help for the nyl_vendors module.
+    case 'help.page.nyl_vendors':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Searching and references of specific vendors for NY Lottery games.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * @param string $zipcode  => the international postal code for this location (REQUIRED)
+ * @param string $country  => lower-cased two-letter ISO code (REQUIRED)
+ *
+ *  Returns a lat/lon pair of the approximate center of the given postal code in the given country.
+ *
+ * @param array $location
+ *   An associative array $location where only postal code and country are necessary, but can have the keys:
+ *     'street'       => the street portion of the location
+ *     'supplemental' => additional street portion of the location
+ *     'province'     => the province, state, or territory
+ *     'country'      => lower-cased two-letter ISO code (REQUIRED)
+ *     'postal_code'  => the international postal code for this location (REQUIRED)
+ *
+ * @return array
+ *   An associative array where
+ *      'lat' => approximate latitude of the center of the postal code's area
+ *      'lon' => approximate longitude of the center of the postal code's area
+ *      'city' => city,
+ *      'province' => state,
+ *      'country' => lower-cased two-letter ISO code,
+ */
+// Auto-Loader Wildcards
+function nyl_vendors_zipCode_load($zipCode, $country = 'us' ) {
+  $dash_index = strpos($zipCode, '-');
+  // First we strip slash off if we're dealing with a 9-digit US zipcode.
+  if (!($dash_index === FALSE)) {
+    $zipCode = substr($zipCode, 0, $dash_index);
+  }
+  if (strlen($zipCode) > 5) { // can have leading zero.
+    return;
+  }
+  $location = array(
+    'postal_code' => $zipCode,
+    'country' => $country,
+  );
+  // Use Location contrib module (location.us.inc)
+  return array_merge(array('zipCode' => $zipCode), location_get_postalcode_data_us($location));
+
+  // TODO replace with location_search:location_get_postalcode_data(): A function that takes a (postalcode,country) pair an returns lat/lon, city, province.
+}
+// TODO Confirm that there are no breadcrumbs.

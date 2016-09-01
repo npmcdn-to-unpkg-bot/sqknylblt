@@ -1,0 +1,336 @@
+<?php
+/**
+ * @file
+ * Tests for functions in nyl_api_game.inc
+ */
+
+
+
+abstract class NYL_API_DrawGames_BaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp();
+    // set variable in new db.
+    variable_set('nyl_api_server_url', 'https://staging.nylgames.mrmdigital.com/nyl/v1');
+
+    $this->type = GAME_TYPE_DRAW;
+
+    // We expect a names.
+    $this->gameName_map = array(
+      8 => "Lotto",
+      9 => "Numbers",
+      10 => "Take 5",
+      12 => "Mega Millions",
+      13 => "Cash4Life",
+      14 => "Win 4",
+      15 => "Powerball",
+      22 => "Quick Draw",
+      27 => "Pick 10"
+    );
+    // We expect a shortnames.
+    $this->shortName_map = array(
+      8 => "lotto",
+      9 => "numbers",
+      10 => "take5",
+      12 => "mega",
+      13 => "cash",
+      14 => "win",
+      15 => "power",
+      22 => "quick",
+      27 => "pick"
+    );
+  }
+}
+/**
+ * Tests for functionality for nyl_api_getGames($type, &$token = NULL)
+ */
+class NYL_API_getGames_Draw_Test extends NYL_API_DrawGames_BaseCase
+{
+  public static function getInfo() {
+    return array(
+      'name' => 'SimpleTest nyl_api_getGames with DRAW type.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // List of known entitlements
+    $this->entitlements = nyl_api_getDrawEntitlementOptions();
+  }
+
+  /**
+   * Check that nyl_api_getVendors() returns the expected vendor as closest.
+   */
+  function testGetGames() {
+    $response = nyl_api_getGames(GAME_TYPE_DRAW);
+
+//    $this->pass(var_export($response, TRUE));
+//    $this->pass('response : '.json_encode($response));
+
+    $keys = array_keys($this->gameName_map);
+    $this->assertTrue( count($response) == count($this->gameName_map), "Number of Draw games is as expected.");
+    foreach ($response as $i => $game) {
+      $this->assertTrue( in_array($game->game_id, $keys), "Game Id [{$game->game_id}] is known." );
+      $this->assertTrue( $game->name == $this->gameName_map[$game->game_id], "Correct Game name [{$game->name}], for game Id." );
+      $this->assertTrue( $game->short_name == $this->shortName_map[$game->game_id], "Correct short name [{$game->short_name}], for game Id." );
+      foreach ($game->entitlements as $entitlement) {
+        $this->assertTrue( in_array($entitlement, $this->entitlements), "Game entitlement [{$entitlement}] is known." );
+      }
+    }
+  }
+}
+
+// TODO Test instant games.. when implemented.
+
+
+// TODO Test nyl_api_getGame() for QuickDraw (Only game we need this function for).
+
+/**
+ * Tests for functionality for nyl_api_getGameLogo($game_id, $filename, &$token = NULL)
+ */
+class NYL_API_getGameLogo_Draw_Test extends NYL_API_DrawGames_BaseCase
+{
+  public static function getInfo() {
+    return array(
+      'name' => 'SimpleTest nyl_api_getGameLogo with type.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->game_id = array_rand($this->shortName_map);
+    $this->shortName = $this->shortName_map[$this->game_id];
+  }
+
+  function testGameLogo() {
+    $uri = nyl_api_getGameLogo($this->game_id, "simpletest.png");
+    $this->assertTrue($uri == GAME_IMAGE_DIRECTORY.'/simpletest.png', "Filename [{$uri}] is expected.");
+
+    $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+    // https://api.drupal.org/api/drupal/includes!stream_wrappers.inc/class/DrupalPublicStreamWrapper/7.x
+    $mimeType = $wrapper->getMimeType($uri);
+    $this->assertTrue($mimeType == 'image/png', "{$this->shortName} Logo is an PNG image.");
+  }
+}
+
+
+/**
+ * Tests for functionality for nyl_api_getGameDetails ($game_id, &$token = NULL)
+ */
+class NYL_API_getGameDetail_Draw_Test extends NYL_API_DrawGames_BaseCase
+{
+  public static function getInfo()
+  {
+    return array(
+      'name' => 'SimpleTest nyl_api_getGameDetails.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp()
+  {
+    parent::setUp();
+    $this->game_id = array_rand($this->gameName_map);
+    $this->gameName = $this->gameName_map[$this->game_id];
+  }
+
+  function testGameDetail_short_description()
+  {
+    $detail = nyl_api_getGameDetail($this->game_id, GAME_DETAIL_TYPE_SHORT_DESCRIPTION);
+    $this->assertFalse(empty($detail), "Game 'short_description' Details exist for {$this->gameName} [{$this->game_id}].");
+    $this->verbose(var_export($detail, TRUE));
+  }
+
+  function testGameDetail_long_description ()
+  {
+    $detail = nyl_api_getGameDetail($this->game_id, GAME_DETAIL_TYPE_LONG_DESCRIPTION);
+    $this->assertFalse(empty($detail), "Game 'long_description' Detail exist for {$this->gameName} [{$this->game_id}].");
+    $this->verbose(var_export($detail, TRUE));
+  }
+
+  function testGameDetail_disclaimer ()
+  {
+    $detail = nyl_api_getGameDetail($this->game_id, GAME_DETAIL_TYPE_DISCLAIMER);
+    $this->assertFalse(empty($detail), "Game 'disclaimer' Detail exist for {$this->gameName} [{$this->game_id}].");
+    $this->verbose(var_export($detail, TRUE));
+  }
+
+  function testGameDetail_type_ways_to_win()
+  {
+    $detail = nyl_api_getGameDetail($this->game_id, GAME_DETAIL_TYPE_WAYS_TO_WIN);
+    $this->assertFalse(empty($detail), "Game 'ways_to_win' Detail exist for {$this->gameName} [{$this->game_id}].");
+    $this->verbose(var_export($detail, TRUE));
+  }
+
+  function testGameDetail_odds()
+  {
+    $detail = nyl_api_getGameDetail($this->game_id, GAME_DETAIL_TYPE_ODDS);
+    $this->assertFalse(empty($detail), "Game 'Odds' Detail exist for {$this->gameName} [{$this->game_id}].");
+    $this->verbose(var_export($detail, TRUE));
+  }
+}
+
+
+
+/**
+ * Tests for functionality for nyl_api_getGameDraws ($game_id, $query, &$token = NULL)
+ */
+class NYL_API_nyl_api_getGameDraws_Draw_Test extends NYL_API_DrawGames_BaseCase
+{
+  public static function getInfo()
+  {
+    return array(
+      'name' => 'SimpleTest nyl_api_getGameDraws.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp()
+  {
+    parent::setUp();
+    $this->game_id = array_rand($this->gameName_map);
+    $this->gameName = $this->gameName_map[$this->game_id];
+  }
+//
+//  /**
+//   * Obtains a list of GameDraw objects for a specified timeframe for a specific game with ID.
+//   */
+//  function testGameDraws()
+//  {
+//    $token = NULL;
+//    foreach ($this->gameName_map as $game_id => $gameName) {
+//      $draws = nyl_api_getGameDraws($game_id, array(), $token);
+//      $count = count($draws);
+//      $this->assertFalse(empty($draws), "{$gameName} Draws exist.");
+//      $this->assertTrue($count == 10, "Always get 10 Drawings.");
+//    }
+//  }
+
+  /**
+   * Get all the 'Quick Draw' result for some date
+   * QuickDraw results CAN be queried based on time… /game/22/draws?from={utc-timestamp}&to={utc-timestamp}
+   */
+  function testGameDraws_FromTo() {
+    $game_id = 22; // Quick Draw'
+    $from = new DateTime('2015-10-29');
+    $to = new DateTime('2015-10-30');
+    $options = array(
+      'from' => $from->getTimestamp(),
+      'to' => $to->getTimestamp()
+    );
+    $this->verbose(json_encode($options));
+    $draws = nyl_api_getGameDraws($game_id, $options);
+    $count = count($draws);
+    $this->assertTrue($count == 20, "Drawing Size option worked, for 'Quick Draw'.".$count);
+  }
+
+
+  /**
+   * Get 30days for drawing results for an non-QuickDraw gamedsm
+   */
+  //  function testGameDraws_size() {
+  //    $game_id = 22; // Quick Draw'
+  //    $options = array('size' => 20);
+  //    $draws = nyl_api_getGameDraws($game_id, $options, $token);
+  //    $count = count($draws->data);
+  //    $this->assertTrue($count == 20, "Drawing Size option worked, for 'Quick Draw'.");
+  //  }
+}
+
+
+
+/**
+ * Tests for functionality for nyl_api_getGameDraw ($game_id, $drawing_id, &$token = NULL)
+ * Tests for functionality for nyl_api_getGameDrawsLast($game_id, &$token = NULL)
+ * Tests for functionality for nyl_api_getGameDrawsCurrent($game_id, &$token = NULL)
+ */
+class NYL_API_nyl_api_getGameDraw_Draw_Test extends NYL_API_DrawGames_BaseCase
+{
+  public static function getInfo()
+  {
+    return array(
+      'name' => 'SimpleTest nyl_api_getGameDraws.',
+      'description' => "Confirm that Required parameter near works.",
+      'group' => 'NYLottery',
+    );
+  }
+
+  function setUp()
+  {
+    parent::setUp();
+    $this->game_id = array_rand($this->gameName_map);
+    $this->gameName = $this->gameName_map[$this->game_id];
+
+    $this->draws = nyl_api_getGameDraws($this->game_id, array());
+
+  }
+
+  /**
+   * nyl_api_getGameDraw ($game_id, $draw_id, &$token = NULL)
+   */
+  function testGameDraw()
+  {
+    $token = NULL;
+    foreach ($this->draws as $draw) {
+      $result = nyl_api_getGameDraw($this->game_id, $draw->id, $token);
+
+      $this->assertTrue( $result->gameId == $this->game_id, "{$draw->id} : gameId match");
+      $this->assertTrue( $result->id == $draw->id, "{$draw->id} : draw->id match");
+      $this->assertTrue( $result->drawNumber == $draw->drawNumber , "{$draw->id} : draw->drawNumber match");
+      $this->assertTrue( $result->jackpot == $draw->jackpot, "{$draw->id} : draw->jackpot match");
+      $this->assertTrue( $result->resultDate == $draw->resultDate, "{$draw->id} : draw->id match");
+      $this->assertTrue( $result->results == $draw->results, "{$draw->id} : draw->results match");
+      $this->assertTrue( $result->status == $draw->status, "{$draw->id} : draw->status match");
+      $this->assertTrue( $result->specialResult == $draw->specialResult, "{$draw->id} : draw->id match");
+      $this->assertTrue( $result->multiplierAmount == $draw->multiplierAmount, "{$draw->id} : draw->multiplierAmount match");
+      $this->assertTrue( $result->drawPeriod == $draw->drawPeriod, "{$draw->id} : draw->drawPeriod match");
+    }
+  }
+
+  /**
+   * nyl_api_getGameDrawsLast($game_id, &$token = NULL)
+   */
+  function testGameDrawsLast()
+  {
+    $draw = current($this->draws);
+    $result = nyl_api_getGameDraw($this->game_id, $draw->id);
+
+    $this->assertTrue( $result->gameId == $this->game_id, 'gameId match');
+    $this->assertTrue( $result->id == $draw->id, 'draw->id match');
+    $this->assertTrue( $result->drawNumber == $draw->drawNumber , 'draw->drawNumber match');
+    $this->assertTrue( $result->jackpot == $draw->jackpot, 'draw->jackpot match');
+    $this->assertTrue( $result->resultDate == $draw->resultDate, 'draw->id match');
+    $this->assertTrue( $result->results == $draw->results, 'draw->results match');
+    $this->assertTrue( $result->status == $draw->status, 'draw->status match');
+    $this->assertTrue( $result->specialResult == $draw->specialResult, 'draw->id match');
+    $this->assertTrue( $result->multiplierAmount == $draw->multiplierAmount, 'draw->multiplierAmount match');
+    $this->assertTrue( $result->drawPeriod == $draw->drawPeriod, 'draw->drawPeriod match');
+
+  }
+
+  /**
+   * nyl_api_getGameDrawsCurrent($game_id, &$token = NULL)
+   */
+  function testGameDrawsCurrent()
+  {
+    $draw = current($this->draws);
+    $result = nyl_api_getGameDrawsCurrent($this->game_id);
+    $this->assertFalse(empty($draw), "{$this->gameName}'s Current Draw exist.");
+
+    $this->assertTrue( $result->gameId == $this->game_id, 'Current : gameId match');
+    $this->assertTrue( $result->id == $draw->id, 'Current : draw->id match');
+    $this->assertTrue( $result->drawNumber == ($draw->drawNumber + 1) , 'Current : draw->drawNumber is last + 1');
+    $this->assertTrue( $result->jackpot > 0 , 'Current : draw->jackpot not empty');
+    $this->assertTrue( $result->resultDate > $draw->resultDate, 'Current : draw->id match');
+    $sum = array_sum(explode('-', $result->results));
+    $this->assertTrue( $sum == 0, 'Current : draw->results should not have a value.');
+    $this->assertFalse( $result->status == 22, 'Current : not payable.'); // not DRWSTS_ALLPAYABLE (All divisions / sets are payable)
+  }
+
+}

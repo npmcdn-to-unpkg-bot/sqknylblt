@@ -1,0 +1,42 @@
+name = NYLottery
+description = Based on Bootstrap theme
+core = 7.x
+base theme = bootstrap
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Regions
+;;;;;;;;;;;;;;;;;;;;;
+
+regions[navigation]     = 'Navigation'
+regions[header]         = 'Top Bar'
+regions[highlighted]    = 'Highlighted'
+regions[help]           = 'Help'
+regions[content]        = 'Content'
+regions[sidebar_first]  = 'Primary'
+regions[sidebar_second] = 'Secondary'
+regions[footer]         = 'Footer'
+regions[page_top]       = 'Page top'
+regions[page_bottom]    = 'Page bottom'
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Stylesheets
+;;;;;;;;;;;;;;;;;;;;;
+stylesheets[all][] = assets/css/style.css
+stylesheets[all][] = assets/css/animation.css
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Scripts
+;;;;;;;;;;;;;;;;;;;;;
+
+exclude[js][] = sites/all/themes/bootstrap/js/bootstrap.js
+scripts[] = assets/lib/bootstrap-sass/assets/javascripts/bootstrap.min.js
+scripts[] = assets/lib/slick-carousel/slick/slick.min.js
+scripts[] = assets/scripts/TweenMax.min.js
+scripts[] = assets/scripts/jquery.waypoints.min.js
+scripts[] = assets/scripts/main.js
+
+; Disable BootstrapCDN so the compiled LESS source files can be used.
+settings[bootstrap_cdn] = ''

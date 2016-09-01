@@ -1,0 +1,30 @@
+.modal.ways-to-play .icon {
+    background-image: url('http://placehold.it/100x65');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.modal.ways-to-play .game-icon-number-generators {
+    background-image: url('../nyl_ways_to_play/image/number-generators.png');
+}
+
+/*.modal.ways-to-play .more-ways .icon.players-club {*/
+    /*background-image: url('../nyl_ways_to_play/image/players-club.png');*/
+/*}*/
+
+.modal.ways-to-play .game-icon-promotions {
+    background-image: url('../nyl_ways_to_play/image/promotions.png');
+}
+
+.modal.ways-to-play .game-icon-second-chance-sweepstakes {
+    background-image: url('../nyl_ways_to_play/image/second-chance-sweepstakes.png');
+}
+
+.modal.ways-to-play .game-icon-subscriptions {
+    background-image: url('../nyl_ways_to_play/image/subscriptions.png');
+}
+
+.modal.ways-to-play .header2.more-ways-to-play {
+    margin-top: 2.9rem;
+}

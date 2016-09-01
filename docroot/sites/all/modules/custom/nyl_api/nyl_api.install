@@ -1,0 +1,20 @@
+<?php
+/**
+ * @file
+ * Contains nyl_api.install.php.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function nyl_api_install() {
+  // Activate our custom cache handler for the CSS cache.
+  variable_set('nyl_api_server_url', 'https://staging.nylgames.mrmdigital.com/nyl/v1');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function nyl_api_uninstall() {
+  variable_del('nyl_api_server_url');
+}

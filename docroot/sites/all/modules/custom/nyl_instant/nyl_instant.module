@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NYLottery Instant Game feature.
+ */
+
+include_once 'nyl_instant.features.inc';

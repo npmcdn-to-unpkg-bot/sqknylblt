@@ -1,0 +1,107 @@
+.dropdown {
+  margin: {
+    bottom: rem-calc(20px);
+    top: rem-calc(20px);
+  }
+  /*max-width: rem-calc(300px);*/
+
+  @include md-desktop-up {
+    /*max-width: rem-calc(145px);*/
+  }
+
+  label {
+    @include h3;
+
+    @include md-desktop-up {
+      @include subheader3;
+    }
+  }
+
+  .dropdown-selected {
+    float: left;
+  }
+
+  .btn {
+    @include h3;
+    display: block;
+    line-height: rem-calc(40px);
+    padding: 0 rem-calc(15px);
+    text-align: left;
+    width: 100%;
+
+    @include md-desktop-up {
+      @include subheader3;
+      line-height: rem-calc(25px);
+      padding: 0 rem-calc(12px);
+    }
+  }
+
+  &.dark .btn {
+    border: 0;
+    border-radius: 0;
+
+    &, &:hover, &:focus {
+      background: $dark-select-bg-color;
+      color: $white;
+    }
+  }
+
+  .glyphicon-triangle-bottom, .glyphicon-triangle-top {
+    font-size: 1.5em;
+    line-height: rem-calc(40px);
+
+    @include md-desktop-up {
+      line-height: rem-calc(24px);
+    }
+  }
+
+  .glyphicon.open,
+  &.open .glyphicon.closed {
+    display: none;
+  }
+
+  &.open .glyphicon.open {
+    display: inline-block;
+  }
+
+  &.large {
+    @include md-desktop-up {
+      max-width: rem-calc(297.5px);
+    }
+
+    .btn {
+      @include h3;
+
+      @include md-desktop-up {
+        padding: 0 rem-calc(15px);
+      }
+    }
+
+    .btn, .glyphicon-triangle-bottom, .glyphicon-triangle-top {
+      @include md-desktop-up {
+        line-height: rem-calc(40px);
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  background-color: $dark-select-dropdown-bg-color;
+  border: 0;
+  border-radius: 0;
+  margin: rem-calc(5px) 0 0;
+  padding: rem-calc(15px) 0;
+  width: 100%;
+
+  > li > a {
+    @include h3;
+    color: $white;
+    line-height: rem-calc(41px);
+    padding: 0 rem-calc(15px);
+
+    &:hover, &:focus, &.active, &.default {
+      background-color: transparent;
+      color: $lottery-yellow;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+<?php
+require_once('includes/nyl_api_game.inc');
+require_once('includes/nyl_api_vendor.inc');
+// require_once('tests/nyl_api_game.test');
+require_once('tests/nyl_api_vendor.test');
+
+define('NYL_API_CACHE_EXPIRE_MIN', 60*60); // 60 min (Quick Draw is every 4 min)NYL_DRAW_CACHE_EXPIRE_MIN
+/** setting.php will have nyl_api_cache_expire_min set to 1 min */
+
+/**
+ * implement hook_menu
+ * @return array
+ */
+
+function nyl_api_menu() {
+
+  $items = array();
+  
+  // Administration pages.
+  $items['admin/config/nyl'] = array(
+    'title' => 'New York Lottery',
+    'description' => 'Configure NYL Site',
+    'position' => 'left',
+    'weight' => -21,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/config/nyl/nyl_api'] = array(
+    'title' => 'NY Lottery API module settings',
+    'description' => 'oAuth2 config settings to System of Record',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('nyl_api_admin'),
+    'file' => 'nyl_api.admin.inc',
+    'access arguments' => array('administer site configuration'), // defined in the system module
+  );
+
+  return $items;
+}
+
+
+
+/**
+ * @file
+ * Code for the NYLottery API.
+ *
+ *  username: nyl-v1-client
+ *  password: secret
+ *
+ * "clientId": "a4b7226f-1141-4592-b9aa-18f0310f7a02",
+ * "clientSecret": "59adf4ae-3a31-4a7e-97d2-cf54bd4a9773",
+ *
+ * grant_type=password&username=william.choy%40squeaky.com&password=abcd1234
+ */
+function nyl_api_getAccessToken()
+{
+  $oauth2_config = array(
+    'token_endpoint' => variable_get('nyl_api_server_url') . '/auth/token',
+    'auth_flow' => 'user-password',
+    'client_id' => variable_get('nyl_api_client_id', 'a4b7226f-1141-4592-b9aa-18f0310f7a02'),
+    'client_secret' => variable_get('nyl_api_client_secret', '59adf4ae-3a31-4a7e-97d2-cf54bd4a9773'),
+    'username' => variable_get('nyl_api_username', 'william.choy@squeaky.com'),
+    'password' => variable_get('nyl_api_password', 'abcd1234'),
+  );
+  try {
+    // $oauth2_client = new OAuth2\Client($oauth2_config, $client_id);
+    $oauth2_client = new OAuth2\Client($oauth2_config);
+    $access_token = $oauth2_client->getAccessToken();
+    return $access_token;
+  }
+  catch (Exception $e) {
+    drupal_set_message($e->getMessage(), 'error');
+  }
+}

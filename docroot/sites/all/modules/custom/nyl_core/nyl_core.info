@@ -1,0 +1,16 @@
+name = NYLottery Core
+description = Centralize internal routines, structures and settings useful through the whole project.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.5
+dependencies[] = cool
+dependencies[] = features
+dependencies[] = image
+dependencies[] = jquery_update
+dependencies[] = menu
+dependencies[] = menu_attributes
+dependencies[] = nys_unav
+features[features_api][] = api:2
+features[image][] = home_video_campaign_static
+features[menu_custom][] = menu-footer
+project path = sites/all/modules/custom

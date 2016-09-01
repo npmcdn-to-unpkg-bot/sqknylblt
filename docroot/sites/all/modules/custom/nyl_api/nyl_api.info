@@ -1,0 +1,14 @@
+name = NYLottery API
+description = Makes drupal_http_request via OAuth2 to NYLottery API for readonly data.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.1
+
+dependencies[] = oauth2_client
+dependencies[] = simpletest
+
+files[] = includes/nyl_api_game.inc
+files[] = includes/nyl_api_vendor.inc
+files[] = tests/nyl_api_game.test
+files[] = tests/nyl_api_module.test
+files[] = tests/nyl_api_vendor.test

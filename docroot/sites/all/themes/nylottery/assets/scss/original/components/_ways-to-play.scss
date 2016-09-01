@@ -1,0 +1,66 @@
+.modal.ways-to-play {
+	display: none !important;
+
+	&.in {
+		@include md-desktop-up {
+			display: block !important;
+		}
+	}
+
+	.games {
+		&:nth-child(2) {
+			margin-bottom: rem-calc(29px);
+		}
+
+		.col-md-3 {
+			@include vertical-align-parent;
+			height: rem-calc(60px);
+			margin-bottom: rem-calc(5px);
+			text-align: center;
+		}
+
+		.game-icon {
+			@include vertical-align;
+			display: inline-block;
+			width: 58%;
+
+			img {
+				height: auto;
+				max-height: rem-calc(60px);
+				width: 100%;
+			}
+		}
+
+		.scratch-off p {
+			width: 150%;
+
+			@include lg-desktop {
+				width: 140%;
+			}
+		}
+	}
+
+	.more-ways {
+		margin-top: rem-calc(14px);
+		text-align: center;
+
+		.icon {
+			max-width: 72%;
+			min-height: rem-calc(37.5px);
+
+			img {
+				max-height: rem-calc(32.5px);
+				width: auto;
+				max-width: 100%;
+			}
+		}
+
+		.icon, p {
+			margin: 0 auto;
+		}
+
+		p {
+			max-width: rem-calc(85px);
+		}
+	}
+}

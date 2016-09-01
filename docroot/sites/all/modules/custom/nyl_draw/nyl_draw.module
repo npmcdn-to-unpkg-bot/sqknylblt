@@ -1,0 +1,266 @@
+<?php
+/**
+ * @file
+ * Code for the NYLottery Draw Game feature.
+ */
+include_once 'nyl_draw.features.inc';
+include_once 'includes/nyl_draw_json.inc';
+
+/**
+ * Implement hook_menu
+ * @return mixed
+ */
+function nyl_draw_menu() {
+  $module_path = drupal_get_path('module', 'nyl_draw');
+  $items['nyl_draw/getWaysToPlay.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_draw_getWaysToPlay_json',
+    // 'page arguments' => array(true),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path .'/includes',
+    'file' => 'nyl_draw_json.inc',
+  );
+  $items['nyl_draw/getSuperNav.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_draw_getSuperNav_json',
+    // 'page arguments' => array(true),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path .'/includes',
+    'file' => 'nyl_draw_json.inc'
+  );
+  $items['nyl_draw/%/getGameDraws.json'] = array(
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'nyl_draw_getGameDraws_json',
+    'page arguments' => array(1, true),
+    // 'page arguments' => array(true),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file path' => $module_path .'/includes',
+    'file' => 'nyl_draw_json.inc'
+  );
+  return $items;
+}
+
+/**
+ * Implement hook_theme();
+ * @return array
+ */
+function nyl_draw_theme() {
+  $module_path = drupal_get_path('module', 'nyl_draw');
+  return array(
+    'nyl_draw_game_overview_block'=> array(
+      'template' => 'nyl-draw-game-overview-block',
+      'path' => $module_path.'/templates',
+      'variables' => array('node' => NULL)
+    ),
+    'nyl_draw_games_block' => array(
+      'template' => 'nyl-draw-games-block',
+      'path' => $module_path.'/templates',
+      'variables' => array('nodes' => NULL)
+    ),
+    'nyl_draw_winning_numbers_block' => array(
+      'template' => 'nyl-draw-winning-numbers-block',
+      'path' => $module_path.'/templates',
+      'variables' => array('nodes' => NULL)
+    ),
+    'nyl_draw_WaysToPlay' => array(
+      'template' => 'nyl-draw-WaysToPlay',
+      'path' => $module_path.'/templates',
+      'variables' => array('node' => NULL, 'next' => NULL)
+    ),
+
+
+//    'nyl_draw_SuperNav_'.LOTTO   => array('template' => 'nyl-draw-SuperNav-'.LOTTO,   'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.NUMBERS => array('template' => 'nyl-draw-SuperNav-'.NUMBERS, 'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.MEGA    => array('template' => 'nyl-draw-SuperNav-'.MEGA,    'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.CASH    => array('template' => 'nyl-draw-SuperNav-'.CASH,    'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.WIN     => array('template' => 'nyl-draw-SuperNav-'.WIN,     'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.POWER   => array('template' => 'nyl-draw-SuperNav-'.POWER,   'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.QUICK   => array('template' => 'nyl-draw-SuperNav-'.QUICK,   'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+//    'nyl_draw_SuperNav_'.PICK    => array('template' => 'nyl-draw-SuperNav-'.PICK,    'variables' => array('node' => NULL, 'next' => NULL, 'last' => NULL)),
+  );
+}
+
+/**
+ * Implement hook_preprocess_node(&$variables) {
+ */
+// function nyl_draw_page
+
+
+
+/**
+ * Implements hook_block_info().
+ */
+function nyl_draw_block_info() {
+  $blocks = array();
+  $blocks['nyl_draw_games_block'] = array(
+    'info' => t('Ways To Play: Draw Games Block'),
+  );
+//  $blocks['nyl_draw_winning_numbers_block'] = array(
+//    'info' => t('Nav : Latest Winning Numbers Block'),
+//  );
+  $blocks['nyl_draw_game_overview_block'] = array(
+    'info' => t('nyl draw game overview block'),
+  );
+  return $blocks;
+}
+/**
+ * Implements hook_block_view().
+ */
+function nyl_draw_block_view($delta='') {
+  $block = array();
+
+  switch($delta) {
+    case 'nyl_draw_games_block' :
+      $nodes = node_load_multiple(array(), array('type' => 'draw_game', 'status' => 1));
+      $block['subject'] = t("Draw Games");
+      $block['content'] = array(
+        '#theme' => 'nyl_draw_games_block',
+        '#nodes' => $nodes,
+      );
+      break;
+//    case 'nyl_draw_winning_numbers_block';
+//      $nodes = node_load_multiple(array(), array('type' => 'draw_game', 'status' => 1));
+//      $block['content'] = array(
+//        '#theme' => 'nyl_draw_winning_numbers_block',
+//        '#nodes' => $nodes,
+//      );
+//      break;
+    case 'nyl_draw_game_overview_block':
+      $node = menu_get_object();
+      $block['content'] = array(
+        '#theme' =>  'nyl_draw_game_overview_block',
+        '#node' => $node,
+      );
+      break;
+  }
+
+  return $block;
+}
+
+
+/**
+ * Custom function to assemble renderable array for block content.
+ * Returns a renderable array with the block content.
+ * @return
+ *   returns a renderable array of block content.
+ */
+function my_block_view() {
+  $block = array();
+}
+/**
+ * Implements hook_flush_caches().
+ */
+function nyl_draw_flush_caches() {
+  return array('cache_nyl_draw');
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter
+ * - https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_form_BASE_FORM_ID_alter/7.x
+ * - FORM_ID = draw_game_data_node_form
+ */
+function nyl_draw_form_draw_game_node_form_alter(&$form, &$form_state, $form_id) {
+
+  array_unshift($form['#validate'], 'nyl_draw_game_validate');
+
+  // Enable vertical tabs on a form.
+  //  $vtabs = variable_get('vertical_tabs_forms', array());
+  //  $vtabs['draw_game_data_node_form'] = TRUE;
+  //  variable_set('vertical_tabs_forms', $vtabs);
+}
+
+/**
+ * Validate profile form
+ *
+ */
+function nyl_draw_game_validate($form, &$form_state) {
+  $games = nyl_api_getGames(GAME_TYPE_DRAW);
+  //perform some validation logic
+  $game_id = $form_state['values']['field_draw_game_id']['und'][0]['value'];
+  $key = array_search($game_id, array_map(function($g) { return $g->game_id; }, $games));
+  if ($key === FALSE) {
+    form_set_error('field_draw_game', t('Game Id not found in NYL API.'));
+  }
+  elseif (isset($games[$key])) {
+    $game = $games[$key];
+    $form_state['values']['title'] = $game->name; // TODO: SHOULD WE ??????
+    $form_state['values']['field_draw_game_rank']['und'][0]['value'] = (int) $game->rank;
+    $options = array_column($form_state['values']['field_draw_game_options']['und'], 'value');
+
+//    // Check Sum Ball option..........................................................................
+//    if (in_array('sum_ball', $game->entitlements)) {
+//      if ($form_state['values']['field_draw_bonus_name']['und'][0]['value'] != "Lucky Sum") {
+//        // Value has a special handler in the Super Nav or its prepocessor.
+//        form_set_error('field_draw_bonus_name', t('Game should have a "Lucky Sum" bonus ball.'));
+//      }
+//    }
+//
+//    // Check Bonus Ball option...........................................................................
+//    if (in_array($game_id, array(LOTTO, NUMBERS, WIN))) {
+//      // Lotto is a special case.   Which has a bonus ball but user is not allowed to choose it.
+//      if (empty($form_state['values']['field_draw_bonus_name']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_name', t('LOTTO/NUMBERS/WIN Games should have use the Bonus Ball Name.'));
+//      }
+//      if (! empty($form_state['values']['field_draw_bonus_max']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_max', t('LOTTO/NUMBERS/WIN Games should not have a bonus_max value.'));
+//      }
+//    }
+//    elseif (in_array($game_id, array(MEGA, POWER, CASH))) {
+//      // Game had a a Bonus Ball the is chosen [pick_min to bonus max]
+//      if (empty($form_state['values']['field_draw_bonus_name']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_name', t('MEGA/POWER/CASH Games should have the Bonus Ball Name.'));
+//      }
+//      if (empty($form_state['values']['field_draw_bonus_max']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_max', t('MEGA/POWER/CASH Games should have any bonus_max value.'));
+//      }
+//    }
+//    else {
+//      if (! empty($form_state['values']['field_draw_bonus_name']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_name', t('Game should NOT have a Bonus Ball Name.'));
+//      }
+//      if (! empty($form_state['values']['field_draw_bonus_max']['und'][0]['value'])) {
+//        form_set_error('field_draw_bonus_max', t('Game should NOT have any bonus_max value.'));
+//      }
+//    }
+//
+//
+//    // Check if Order Matters..........................................................................
+//    if (in_array('generate_duplicates', $game->entitlements)) {
+//      if (! in_array('order_matters', $options)) {
+//        form_set_error('field_draw_game_options', t('Game should have a Order Matters option.'));
+//      }
+//    }
+//    else if (in_array('order_matters', $options)) {
+//      form_set_error('field_draw_game_options', t('Game should NOT have a Permutation option.'));
+//    }
+//
+//    // Check the Live Draw option..........................................................................
+//    if (in_array('live_draw', $game->entitlements)) {
+//      if (! in_array('live_draw', $options)) {
+//        form_set_error('field_draw_game_options', t('Game should have a Live Draw option.'));
+//      }
+//    }
+//    else if (in_array('live_draw', $options)) {
+//      form_set_error('field_draw_game_options', t('Game should NOT have a Live Draw option.'));
+//    }
+//
+//    // Download the Logo.png and name the png file based on the game's Name.
+//    nyl_api_getGameLogo($game->game_id, str_replace(" ", "_", $game->name).".png");
+  }
+}
+
+/**
+ * Implements hook_node_load().
+ * -- https://api.drupal.org/api/drupal/modules!node!node.api.php/function/hook_node_load/7.x
+ * https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_entity_load/7.x
+ * https://api.drupal.org/api/drupal/modules!field!field.api.php/function/hook_field_storage_load/7.x
+ */
+//function nyl_draw_game_node_load($nodes, $types) {
+//    // Decide whether any of $types are relevant to our purposes.
+//    if (in_array('nyl_draw_game', $types))) {
+
+
+

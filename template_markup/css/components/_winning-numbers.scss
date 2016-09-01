@@ -1,0 +1,423 @@
+.winning-numbers {
+  position: relative;
+  top: rem-calc(-20px);
+  text-align: center;
+  z-index: 100;
+}
+
+.winning-tray {
+  height: 100vh;
+
+  &.in .tray-button {
+    border: 0;
+    outline: 0;
+  }
+
+  .modal-header {
+    a.tray-button {
+      background: $lottery-blue;
+      color: $lottery-yellow;
+      width: 100%;
+
+      @include md-desktop-up {
+        background: none transparent;
+        color: $dark-blue;
+        display: inline-block;
+        width: auto;
+      }
+
+      &.btn {
+        border-radius: 0;
+      }
+
+      .caret-up {
+        @include prefixr(transform, rotate(180deg));
+      }
+    }
+
+    .mobile-tray-nav {
+      height: 83vh;
+      -webkit-transition: height 1.5s;
+      transition: height 1.5s;
+      overflow: hidden;
+      background: $white;
+      width: 100%;
+      padding: rem-calc(20px) rem-calc(10px);
+
+      &.open {
+        height: 35vh;
+      }
+
+      .container-fluid {
+        height: 100%;
+        position: relative;
+        top: 50%;
+        @include prefixr(transform, translateY(-50%));
+      }
+
+      .row {
+        margin-bottom: rem-calc(20px);
+        margin-top: rem-calc(20px);
+        height: 20vh;
+        @include prefixr(transition, height 1.5s);
+
+        .col-xs-4 {
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        .game-icon {
+          margin-top: -300vh;
+          @include prefixr(transition, margin 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.1));
+
+          a.off {
+            opacity: .3;
+          }
+
+          img {
+            height: auto;
+            max-height: 6vh;
+            max-width: rem-calc(100px);
+            width: 75%;
+
+            @include md-desktop-up {
+              width: 100%;
+            }
+          }
+        }
+
+        .game-icon.icon-ani {
+          margin-top: 0;
+        }
+      }
+
+      .row.height-auto {
+        height: 6vh;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0;
+
+    .col-xs-12 {
+      padding-right: 0;
+      padding-left: 0;
+      min-height: 0;
+
+      @include md-desktop-up {
+        border-top: 1px solid #D7D7D7;
+        border-right: 1px solid #D7D7D7;
+        height: 175px;
+
+        &:nth-child(1), &:nth-child(2), &:nth-child(3) {
+          border-top: 0;
+        }
+
+        &:nth-child(3n) {
+          border-right: 0;
+        }
+      }
+    }
+
+    .well .col-xs-12 {
+      min-height: 0;
+    }
+  }
+
+  .container.games {
+    @include md-desktop-up {
+      background-color: $white;
+      margin: 0 auto;
+      height: 525px;
+    }
+  }
+
+  .game {
+    display: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
+
+    @include md-desktop-up {
+      display: block;
+      height: 197px;
+      left: -22px;
+      position: relative;
+      top: -22px;
+      width: 20.125rem;
+    }
+
+    @include lg-desktop {
+      width: 21.1rem;
+    }
+
+    &.on {
+      display: block;
+    }
+
+    .inner {
+      @include md-desktop-up {
+        bottom: 0;
+        height: 175px;
+        padding: rem-calc(7.5px) 0;
+        position: absolute;
+        right: 0;
+        @include prefixr(transition, transform ease .125s);
+        width: 18.75rem;
+
+        &:before, &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          @include prefixr(transition, transform ease .125s);
+        }
+
+        &:before {
+          background-color: $lottery-orange;
+          height: 4rem;
+          left: 2rem;
+          top: 100%;
+          @include prefixr(transform, skewX(45deg));
+          width: 100%;
+          z-index: 2;
+        }
+
+        &:after {
+          background-color: $lottery-red;
+          height: 100%;
+          left: 100%;
+          top: 2rem;
+          @include prefixr(transform, skewY(45deg));
+          width: 4rem;
+        }
+      }
+
+      @include lg-desktop {
+        width: 20rem;
+      }
+    }
+
+    .draw-info {
+      @include md-desktop-up {
+        display: block;
+      }
+    }
+
+    .more-info {
+      margin-bottom: rem-calc(25px);
+
+      @include md-desktop-up {
+        display: none;
+        margin-bottom: 0;
+        margin-top: 0;
+      }
+
+      p {
+        @include detail1;
+        color: $dark-blue;
+        margin: 0;
+
+        @include md-desktop-up {
+          @include detail3;
+          color: $white;
+
+          strong {
+            @include subheader3;
+          }
+
+          &.col-md-6 strong {
+            display: block;
+          }
+        }
+      }
+    }
+
+    .btn {
+      @include md-desktop-up {
+        display: none;
+        height: 2rem;
+        line-height: 2rem;
+        width: 10rem;
+
+        &:hover span {
+          @include prefixr(transform, translateY(0.2rem) translateX(0.2rem));
+        }
+      }
+
+      span {
+        @include md-desktop-up {
+          @include detail4;
+          height: 1.7rem;
+          line-height: 1.7rem;
+          width: 9.7rem;
+        }
+      }
+    }
+
+    .logo {
+      box-sizing: border-box;
+      display: inline-block;
+      height: rem-calc(99px);
+      margin: 0 auto;
+      max-width: rem-calc(150px);
+      padding: rem-calc(20px) 0;
+      width: 30%;
+      @include md-desktop-up {
+        padding: 0;
+        &, img {
+          max-height: rem-calc(30px);
+        }
+        & {
+          @include vertical-align-parent;
+        }
+        img {
+          @include vertical-align;
+        }
+      }
+    }
+
+    .text-date {
+      @include h2;
+      color: $dark-blue;
+      font-weight: 600;
+      margin: rem-calc(5px) 0 rem-calc(10px);
+
+      @include md-desktop-up {
+        @include subheader3;
+        margin: rem-calc(6px) 0 0;
+      }
+    }
+
+    .circ {
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      padding: rem-calc(10px) rem-calc(17px);
+      font-size: rem-calc(14px);
+      line-height: 1;
+      border: 1px solid $dark-blue;
+      position: relative;
+      display: inline-block;
+      width: auto;
+      @include md-desktop-up {
+        padding: rem-calc(1px) rem-calc(8px);
+      }
+      .height-fix {
+        margin-top: 100%;
+        display: inline-block;
+      }
+      .content {
+        @include body1;
+        height: 100%;
+        left: 0;
+        margin-top: rem-calc(-8px);
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        /* Note, this must be half the font size */
+        display: inline-block;
+        color: $dark-blue;
+        @include md-desktop-up {
+          @include body5;
+          line-height: rem-calc(18px);
+          margin-top: rem-calc(-9px);
+        }
+      }
+    }
+
+    .circ-mid {
+      @extend .circ;
+    }
+
+    .circ-small {
+      @extend .circ;
+      margin-bottom: rem-calc(5px);
+      padding: rem-calc(7px) rem-calc(14px);
+
+      @include md-desktop-up {
+        margin-bottom: rem-calc(2px);
+        padding: 0 rem-calc(7px);
+      }
+
+      .content {
+        @include body3;
+        @include md-desktop-up {
+          @include body7;
+        }
+      }
+    }
+
+    .ball {
+      background-color: $dark-blue;
+
+      .content {
+        color: $white;
+      }
+    }
+
+    .megaspace {
+      display: inline-block;
+      margin: 0 rem-calc(5px);
+    }
+
+    .numbers {
+      display: inline-block;
+      margin-bottom: rem-calc(17.5px);
+      position: relative;
+
+      .ball-text {
+        @include prefixr(transform, translateX(20%));
+        @include h4;
+        color: $dark-blue;
+      }
+
+      .megaplier-text {
+        @include h3;
+        color: $dark-blue;
+      }
+
+      .megaplier-text, .ball-text {
+        @include md-desktop-up {
+          @include detail4;
+        }
+      }
+
+      .table-row {
+        display: block;
+      }
+    }
+
+    &:hover {
+      @include md-desktop-up {
+        box-sizing: content-box;
+        z-index: 100;
+
+        .inner {
+          background: $lottery-blue;
+          @include prefixr(transform, translateX(-22px) translateY(-22px));
+        }
+      }
+
+      .draw-info {
+        @include md-desktop-up {
+          display: none;
+        }
+      }
+
+      .btn {
+        @include md-desktop-up {
+          display: inline-block;
+        }
+      }
+
+      .more-info {
+        @include md-desktop-up {
+          display: block;
+        }
+      }
+    }
+  }
+}

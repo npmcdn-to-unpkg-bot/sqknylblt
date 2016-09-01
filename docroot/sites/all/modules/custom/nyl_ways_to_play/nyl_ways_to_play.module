@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Contains nyl_ways_to_play.module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function nyl_ways_to_play_theme()
+{
+  $module_path = drupal_get_path('module', 'nyl_ways_to_play');
+  return array(
+    'ways_to_play_subnav' => array(
+      'template' => 'ways-to-play-subnav',
+      'path' => $module_path . '/templates',
+      'variables' => array('menu' => array())
+    ),
+    'ways_to_play_children' => array(
+      'template' => 'ways-to-play-children',
+      'path' => $module_path . '/templates',
+      'variables' => array('title' => '', 'menu' => array())
+    )
+  );
+}
+
+/**
+ * TODO Move CSS and images to theme dir.
+ */
+function nyl_ways_to_play_init() {
+  drupal_add_css(drupal_get_path('module', 'nyl_ways_to_play').'/nyl_ways_to_play.css');
+}

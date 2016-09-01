@@ -1,0 +1,20 @@
+<?php
+/**
+ * @file
+ * Contains nyl_drawing_results.install.
+ */
+
+/**
+ * Implementation of hook_schema().
+ * -- https://rapiddg.com/blog/introduction-drupal-7s-cache-api
+ */
+function nyl_drawing_results_schema() {
+  $schema = array();
+  $schema['cache_nyl_drawing_results'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
+function nyl_drawing_results_update_7002() {
+  $schema['cache_nyl_drawing_results'] = drupal_get_schema_unprocessed('system', 'cache');
+  db_create_table('cache_nyl_drawing_results', $schema['cache_nyl_drawing_results']);
+}

@@ -1,0 +1,10 @@
+name = NYLottery Vendor
+description = Find Retailers page with GMAP clustering.
+core = 7.x
+package = NY Lottery
+version = 7.x-0.1
+
+dependencies[] = location
+dependencies[] = nyl_api
+
+files[] = includes/nyl_vendor.inc
