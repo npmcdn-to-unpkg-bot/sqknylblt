@@ -9,7 +9,7 @@
   ],
   "require": {
     "drush/drush":                  "7.*",
-    "hirak/prestissimo": "^0.1.9"
+    "hirak/prestissimo": "^0.2"
   },
   "require-dev": {
     "behat/behat":                  "3.0.*",
@@ -22,7 +22,7 @@
     "drupal/coder":                 "8.2.*",
     "phpunit/phpunit":              "4.6.*",
     "squizlabs/php_codesniffer":    "2.*",
-    "phing/phing":                  "dev-propertyfile-fix#b23d903f1d12ee615a9267fab3e2f67519805294",
+    "phing/phing":                  "2.*",
     "jakoch/phantomjs-installer":   "1.9.8",
     "jarnaiz/behat-junit-formatter": "^1.2"
   },
