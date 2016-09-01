@@ -27,4 +27,4 @@ git:
     # Defining git remotes allows builds deployed via CI.
     # Only add git repositories that you would like to deploy to!
     #- bolted7@svn-5159.devcloud.hosting.acquia.com:bolted7.git
-    - git@github.com/zepner/d7blt.git
+    - git@github.com/zepner/sqknylblt.git
